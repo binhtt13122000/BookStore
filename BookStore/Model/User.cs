@@ -29,6 +29,7 @@ namespace BookStore.Model
         [RegularExpression(@"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}")]
         public string Email { get; set; }
         
+        [JsonIgnore]
         [Required]
         [Column("password")]
         [StringLength(100, MinimumLength =5)]
@@ -49,6 +50,7 @@ namespace BookStore.Model
         [ForeignKey(nameof(RoleId))]
         [InverseProperty("Users")]
         public virtual Role Role { get; set; }
+        
         [InverseProperty(nameof(Order.User))]
         public virtual ICollection<Order> Orders { get; set; }
         [InverseProperty(nameof(ProductCart.User))]

@@ -14,6 +14,11 @@ namespace BookStore.Model
         [Key]
         [Column("id")]
         public int Id { get; set; }
+
+        public ProductCart()
+        {
+        }
+
         [Column("userId")]
         public int? UserId { get; set; }
         [Column("bookId")]

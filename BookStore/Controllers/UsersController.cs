@@ -6,19 +6,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BookStore.Model;
-using BookStore.Services;
 using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Microsoft.AspNetCore.Authorization;
-using System.Net.Http.Headers;
 using System.Net.Http;
-using System.Web.Http.Results;
-using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
-using ServiceStack;
-using System.Net;
 using RestSharp;
 using System.Security.Cryptography;
 
@@ -121,7 +114,8 @@ namespace BookStore.Controllers
                     cookie.Value = new JwtSecurityTokenHandler().WriteToken(token).ToString();
                     var resp = new HttpResponseMessage();
                     HttpContext.Response.Cookies.Append(cookie.Name, cookie.Value, new CookieOptions { MaxAge = TimeSpan.FromDays(1), Path = "/api/login", HttpOnly = true });
-                    return Ok("Login is successfull");
+
+                    return Ok(CheckUser);
                 }
                 else
                 {
@@ -141,11 +135,11 @@ namespace BookStore.Controllers
             var user = await _context.Users.FindAsync(id);
             if(user != null)
             {
-                //var cookie = Request.Cookies["Authorization"];
-                //if (cookie != null)
-                //{
+                var cookie = Request.Cookies["Authorization"];
+               // if (cookie != null)
+               // {
                     //HttpContext.Response.Cookies.Delete("Authorization");
-                    return Ok("Logout successfull.");
+                    return Ok(cookie);
                 //}
                 
             }
@@ -174,6 +168,7 @@ namespace BookStore.Controllers
             }else
             {
                 user.Password = GetMD5(user.Password);
+                user.RoleId = 1;
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
                 return Ok("Create new user successfully!");
