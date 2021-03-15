@@ -20,6 +20,25 @@ namespace BookStore.Controllers
             _context = context;
         }
 
+        // GET: api/Orders/users/{userId}
+        [HttpGet("users/{userId}")]
+        public async Task<ActionResult<IEnumerable<Order>>> GetOrdersByUserId(int userId)
+        {
+            if (UserExists(userId))
+            {
+                var order = await _context.Orders.Where(s => s.UserId == userId).ToListAsync();
+
+                if (order == null)
+                {
+                    return NotFound("Can not found order by user id");
+                }
+                return order;
+            }else
+            {
+                return NotFound("User can not found by user id!");
+            }
+        }
+
         // GET: api/Orders
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
