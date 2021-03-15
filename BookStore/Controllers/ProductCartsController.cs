@@ -114,7 +114,7 @@ namespace BookStore.Controllers
                     if(CheckBook.Quantity >= quantity) {
                         if (ProductCartExists(CheckUser.Id, CheckBook.Id, true))
                         {
-                            var ProductCart = _context.ProductCarts.Where(s => s.UserId.Equals(CheckUser.Id) && s.BookId.Equals(CheckBook.Id) && s.Status.Equals(true)).FirstOrDefault();
+                            var ProductCart =  _context.ProductCarts.Where(s => s.UserId.Equals(CheckUser.Id) && s.BookId.Equals(CheckBook.Id) && s.Status.Equals(true)).FirstOrDefault();
                             if (ProductCart.Quantity + quantity <= CheckBook.Quantity)
                             {
                                 _context.Entry(ProductCart).State = EntityState.Modified;

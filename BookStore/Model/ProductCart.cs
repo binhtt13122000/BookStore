@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 #nullable disable
@@ -28,9 +29,12 @@ namespace BookStore.Model
         [Column("status")]
         public bool? Status { get; set; }
 
+        [JsonIgnore]
         [ForeignKey(nameof(BookId))]
         [InverseProperty("ProductCarts")]
         public virtual Book Book { get; set; }
+        
+        [JsonIgnore]
         [ForeignKey(nameof(UserId))]
         [InverseProperty("ProductCarts")]
         public virtual User User { get; set; }

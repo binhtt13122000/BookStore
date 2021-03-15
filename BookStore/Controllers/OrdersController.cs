@@ -73,7 +73,7 @@ namespace BookStore.Controllers
         }
 
         // POST: api/Orders
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // To protect from overposting attacks, see.https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Order>> PostOrder(Order order)
         {
@@ -82,6 +82,89 @@ namespace BookStore.Controllers
 
             return CreatedAtAction("GetOrder", new { id = order.Id }, order);
         }
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        // POST: api/Orders/users/{userId}/books/{bookId}/productCarts
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost("users/{userId}/books/{bookId}/productCarts")]
+        public async Task<ActionResult<Order>> OrderProductInProductCart(int userId, int bookId)
+        {
+            if (UserExists(userId))
+            {
+                var CheckUser = await _context.Users.FindAsync(userId);
+
+                if (BookExists(bookId))
+                {
+                    var CheckBook = await _context.Books.FindAsync(bookId);
+                    if (ProductCartExists(CheckUser.Id, CheckBook.Id, true))
+                    {
+                        using var transaction = _context.Database.BeginTransaction();
+                        try
+                        {
+                            var ProductCart = _context.ProductCarts.Where(s => s.UserId.Equals(CheckUser.Id) && s.BookId.Equals(CheckBook.Id) && s.Status.Equals(true)).FirstOrDefault();
+                            if(CheckBook.Quantity >= ProductCart.Quantity)
+                            {
+                                var Order = new Order();
+                                Order.UserId = CheckUser.Id;
+                                Order.User = CheckUser;
+                                Order.CreateTime = DateTime.Now;
+                                Order.Total = (ProductCart.Quantity * CheckBook.Price);
+                                _context.Orders.Add(Order);
+                                await _context.SaveChangesAsync();
+                                var GetOrder = _context.Orders.Where(s => s.UserId.Equals(CheckUser.Id)).OrderByDescending(s => s.CreateTime).
+                                    FirstOrDefault();
+                                var OrderDetail = new OrderDetail();
+                                OrderDetail.OrderId = GetOrder.Id;
+                                OrderDetail.BookId = CheckBook.Id;
+                                OrderDetail.Quantity = ProductCart.Quantity;
+                                OrderDetail.Price = CheckBook.Price;
+                                _context.OrderDetails.Add(OrderDetail);
+                                await _context.SaveChangesAsync();
+                                _context.Entry(ProductCart).State = EntityState.Modified;
+                                try
+                                {
+                                    ProductCart.Status = false;
+                                    await _context.SaveChangesAsync();
+                                    _context.Entry(CheckBook).State = EntityState.Modified;
+                                    CheckBook.Quantity = CheckBook.Quantity - ProductCart.Quantity;
+                                    await _context.SaveChangesAsync();
+                                }
+                                catch (DbUpdateConcurrencyException)
+                                {
+                                    throw;
+                                }
+                                transaction.Commit();
+                                return Ok("Order successfull!");
+                            }
+                            else
+                            {
+                                return BadRequest("Quantity of product is not enought to order!");
+                            }
+                            
+                        }
+                        catch (Exception e)
+                        {
+                            transaction.Rollback();
+                            return BadRequest(e);
+                        }
+                    }
+                    else
+                    {
+                        return NotFound("Product Cart can not found by user id and book id");
+                    }
+                }
+                else
+                {
+                    return NotFound("Book can not found by book id!");
+                }
+            }
+            else
+            {
+                return NotFound("User can not found by userId!");
+            }
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         // DELETE: api/Orders/5
         [HttpDelete("{id}")]
@@ -97,6 +180,21 @@ namespace BookStore.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        private bool UserExists(int id)
+        {
+            return _context.Users.Any(e => e.Id == id);
+        }
+
+        private bool BookExists(int id)
+        {
+            return _context.Books.Any(e => e.Id == id);
+        }
+
+        private bool ProductCartExists(int userId, int bookId, bool status)
+        {
+            return _context.ProductCarts.Any(e => e.UserId.Equals(userId) && e.BookId.Equals(bookId) && e.Status.Equals(status));
         }
 
         private bool OrderExists(int id)
