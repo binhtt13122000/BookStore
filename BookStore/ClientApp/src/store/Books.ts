@@ -33,14 +33,14 @@ export interface AddBookAction {
 
 export interface UpdateBookAction {
     type: "UPDATE_BOOK";
-    updateBook: Book
+    updateBook: Book;
+    index: number;
 }
 
 type KnownAction = RequestBookAction | ReceiveBookAction | AddBookAction | UpdateBookAction;
 
 export const actionCreators = {
     requestBooks: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
-        // Only load data if it's something we don't already have (and are not already loading)
         fetch(`api/Books`)
             .then(response => response.json() as Promise<Book[]>)
             .then(data => {
@@ -48,6 +48,49 @@ export const actionCreators = {
             });
 
         dispatch({ type: 'REQUEST_BOOK' });
+    },
+
+    createBooks: (book: Book, resolve: any): AppThunkAction<KnownAction> => (dispatch, getState) => {
+        book.categoryId = 1;
+        fetch(`api/Books`, {
+            method: 'post',
+            body: JSON.stringify(book),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => response.json() as Promise<Book>)
+            .then(data => {
+                dispatch({ type: 'ADD_BOOK', newBook: data });
+                resolve();
+            })
+            .catch(err => {
+                resolve();
+                console.log(err)
+            });
+
+    },
+
+    updateBooks: (newBook: Book, oldBook: any, resolve: any): AppThunkAction<KnownAction> => (dispatch, getState) => {
+        newBook.categoryId = 1;
+        fetch(`api/Books/${oldBook.id}`, {
+            method: 'put',
+            body: JSON.stringify(newBook),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.status === 204) {
+                    dispatch({ type: "UPDATE_BOOK", updateBook: newBook, index: oldBook.tableData.id })
+                }
+                resolve();
+            })
+            .catch(err => {
+                resolve();
+                console.log(err)
+            });
+
     }
 };
 
@@ -70,9 +113,23 @@ export const reducer: Reducer<BookState> = (state: BookState | undefined, incomi
                 books: action.books,
                 isLoading: false
             };
+        case 'ADD_BOOK':
+            let listBook = [...state.books];
+            listBook.push(action.newBook);
+            return {
+                books: listBook,
+                isLoading: false
+            };
+        case 'UPDATE_BOOK':
+            let newBooks = [...state.books];
+            newBooks[action.index] = action.updateBook;
+            return {
+                books: newBooks,
+                isLoading: false
+            };
+        default:
+            return state;
     }
-
-    return state;
 };
 
 
