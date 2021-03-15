@@ -4,7 +4,6 @@
     "allowJs": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "strict": true,
     "forceConsistentCasingInFileNames": true,
     "module": "esnext",
     "moduleResolution": "node",
@@ -13,10 +12,11 @@
     "noEmit": true,
     "jsx": "preserve",
     "lib": [
-      "es2015",
+      "ES6",
       "dom"
     ],
-    "skipLibCheck": false
+    "skipLibCheck": false,
+    "strict": true
   },
   "include": [
     "src"

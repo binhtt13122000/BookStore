@@ -3,13 +3,12 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 import { Link } from 'react-router-dom';
 import { ApplicationState } from '../store';
-import * as WeatherForecastsStore from '../store/WeatherForecasts';
+import * as BookStore from '../store/Books';
 
 // At runtime, Redux will merge together...
 type WeatherForecastProps =
-  WeatherForecastsStore.WeatherForecastsState // ... state we've requested from the Redux store
-  & typeof WeatherForecastsStore.actionCreators // ... plus action creators we've requested
-  & RouteComponentProps<{ startDateIndex: string }>; // ... plus incoming routing parameters
+    BookStore.BookState // ... state we've requested from the Redux store
+    & typeof BookStore.actionCreators // ... plus action creators we've requested
 
 
 class FetchData extends React.PureComponent<WeatherForecastProps> {
@@ -29,14 +28,12 @@ class FetchData extends React.PureComponent<WeatherForecastProps> {
         <h1 id="tabelLabel">Weather forecast</h1>
         <p>This component demonstrates fetching data from the server and working with URL parameters.</p>
         {this.renderForecastsTable()}
-        {this.renderPagination()}
       </React.Fragment>
     );
   }
 
   private ensureDataFetched() {
-    const startDateIndex = parseInt(this.props.match.params.startDateIndex, 10) || 0;
-    this.props.requestWeatherForecasts(startDateIndex);
+      this.props.requestBooks();
   }
 
   private renderForecastsTable() {
@@ -50,13 +47,13 @@ class FetchData extends React.PureComponent<WeatherForecastProps> {
             <th>Summary</th>
           </tr>
         </thead>
-        <tbody>
-          {this.props.forecasts.map((forecast: WeatherForecastsStore.WeatherForecast) =>
-            <tr key={forecast.date}>
-              <td>{forecast.date}</td>
-              <td>{forecast.temperatureC}</td>
-              <td>{forecast.temperatureF}</td>
-              <td>{forecast.summary}</td>
+            <tbody>
+                {this.props.books.map((book: BookStore.Book) =>
+                    <tr key={book.id}>
+                        <td>{book.author}</td>
+                        <td>{book.name}</td>
+                        <td>{book.price}</td>
+                        <td>{book.quantity}</td>
             </tr>
           )}
         </tbody>
@@ -64,21 +61,9 @@ class FetchData extends React.PureComponent<WeatherForecastProps> {
     );
   }
 
-  private renderPagination() {
-    const prevStartDateIndex = (this.props.startDateIndex || 0) - 5;
-    const nextStartDateIndex = (this.props.startDateIndex || 0) + 5;
-
-    return (
-      <div className="d-flex justify-content-between">
-        <Link className='btn btn-outline-secondary btn-sm' to={`/fetch-data/${prevStartDateIndex}`}>Previous</Link>
-        {this.props.isLoading && <span>Loading...</span>}
-        <Link className='btn btn-outline-secondary btn-sm' to={`/fetch-data/${nextStartDateIndex}`}>Next</Link>
-      </div>
-    );
-  }
 }
 
 export default connect(
-  (state: ApplicationState) => state.weatherForecasts, // Selects which state properties are merged into the component's props
-  WeatherForecastsStore.actionCreators // Selects which action creators are merged into the component's props
+    (state: ApplicationState) => state.books, // Selects which state properties are merged into the component's props
+    BookStore.actionCreators // Selects which action creators are merged into the component's props
 )(FetchData as any); // eslint-disable-line @typescript-eslint/no-explicit-any
