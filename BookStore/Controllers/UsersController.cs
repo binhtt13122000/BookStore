@@ -95,31 +95,37 @@ namespace BookStore.Controllers
         {
             if(user != null && user.Email != null && user.Password != null)
             {
-                var hashPassword = GetMD5(user.Password);
-                var CheckUser = await _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(user.Email) && u.Password.Equals(hashPassword));
-                if (CheckUser != null)
+                var CheckUser = await _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(user.Email));
+                if(BCrypt.Net.BCrypt.Verify(user.Password, CheckUser.Password))
                 {
-                    var claims = new[]
+                    if (CheckUser != null)
                     {
+                        var claims = new[]
+                        {
                         new Claim("Id", CheckUser.Id.ToString()),
                         new Claim("Name", CheckUser.Name),
                         new Claim("Email", CheckUser.Email),
                         new Claim("RoleId", CheckUser.RoleId.ToString()),
                     };
-                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-                    var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-                    var token = new JwtSecurityToken(_configuration["Jwt:Issuer"], _configuration["Jwt:Audience"], claims, expires: DateTime.UtcNow.AddDays(1), signingCredentials: signIn);
-                    var cookie = new HttpCookie();
-                    cookie.Name = "Authorization";
-                    cookie.Value = new JwtSecurityTokenHandler().WriteToken(token).ToString();
-                    var resp = new HttpResponseMessage();
-                    HttpContext.Response.Cookies.Append(cookie.Name, cookie.Value, new CookieOptions { MaxAge = TimeSpan.FromDays(1), Path = "/api/login", HttpOnly = true });
+                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+                        var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                        var token = new JwtSecurityToken(_configuration["Jwt:Issuer"], _configuration["Jwt:Audience"], claims, expires: DateTime.UtcNow.AddDays(1), signingCredentials: signIn);
+                        var cookie = new HttpCookie();
+                        cookie.Name = "Authorization";
+                        cookie.Value = new JwtSecurityTokenHandler().WriteToken(token).ToString();
+                        var resp = new HttpResponseMessage();
+                        HttpContext.Response.Cookies.Append(cookie.Name, cookie.Value, new CookieOptions { MaxAge = TimeSpan.FromDays(1), Path = "/api/login", HttpOnly = true });
 
-                    return Ok(CheckUser);
+                        return Ok(CheckUser);
+                    }
+                    else
+                    {
+                        return BadRequest("Login is failed!");
+                    }
                 }
-                else
+               else
                 {
-                    return BadRequest("Login is failed");
+                    return BadRequest("Login is failed!");
                 }
             }else
             {
@@ -167,7 +173,7 @@ namespace BookStore.Controllers
                 return BadRequest("Email have been registered!");
             }else
             {
-                user.Password = GetMD5(user.Password);
+                user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
                 user.RoleId = 1;
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
@@ -216,20 +222,7 @@ namespace BookStore.Controllers
             return _context.Users.Any(e => e.Email.Equals(Email));
         }
 
-        public static string GetMD5(string str)
-        {
-            MD5 md5 = new MD5CryptoServiceProvider();
-            byte[] fromData = Encoding.UTF8.GetBytes(str);
-            byte[] targetData = md5.ComputeHash(fromData);
-            string byte2String = null;
 
-            for (int i = 0; i < targetData.Length; i++)
-            {
-                byte2String += targetData[i].ToString("x2");
-
-            }
-            return byte2String;
-        }
 
     }
 }
