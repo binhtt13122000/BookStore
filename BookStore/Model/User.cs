@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 #nullable disable
@@ -21,21 +22,28 @@ namespace BookStore.Model
         [Key]
         [Column("id")]
         public int Id { get; set; }
+        
         [Required]
         [Column("email")]
-        [StringLength(50)]
+        [StringLength(50, MinimumLength = 10)]
+        [RegularExpression(@"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}")]
         public string Email { get; set; }
+        
         [Required]
         [Column("password")]
-        [StringLength(100)]
+        [StringLength(100, MinimumLength =5)]
         public string Password { get; set; }
+        
         [Required]
         [Column("name")]
         [StringLength(50)]
+        
         public string Name { get; set; }
         [Column("status")]
+        
         public bool? Status { get; set; }
         [Column("roleId")]
+        
         public int? RoleId { get; set; }
 
         [ForeignKey(nameof(RoleId))]
