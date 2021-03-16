@@ -37,6 +37,11 @@ export interface UpdateBookAction {
     index: number;
 }
 
+export interface RequestOneBook {
+    type: "REQUEST_ONE_BOOK",
+    book: Book
+}
+
 type KnownAction = RequestBookAction | ReceiveBookAction | AddBookAction | UpdateBookAction;
 
 export const actionCreators = {
@@ -47,6 +52,15 @@ export const actionCreators = {
                 dispatch({ type: 'RECEIVE_BOOK', books: data });
             });
 
+        dispatch({ type: 'REQUEST_BOOK' });
+    },
+
+    requestBook: (id: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
+        fetch(`api/Books/${id}`)
+            .then(response => response.json() as Promise<Book>)
+            .then(data => {
+                dispatch({ type: 'RECEIVE_BOOK', books: [data] });
+            });
         dispatch({ type: 'REQUEST_BOOK' });
     },
 

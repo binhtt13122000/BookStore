@@ -17,6 +17,14 @@ exports.actionCreators = {
         });
         dispatch({ type: 'REQUEST_BOOK' });
     }; },
+    requestBook: function (id) { return function (dispatch, getState) {
+        fetch("api/Books/" + id)
+            .then(function (response) { return response.json(); })
+            .then(function (data) {
+            dispatch({ type: 'RECEIVE_BOOK', books: [data] });
+        });
+        dispatch({ type: 'REQUEST_BOOK' });
+    }; },
     createBooks: function (book, resolve) { return function (dispatch, getState) {
         book.categoryId = 1;
         fetch("api/Books", {
