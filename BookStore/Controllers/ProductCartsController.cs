@@ -41,6 +41,25 @@ namespace BookStore.Controllers
             return productCart;
         }
 
+        // GET: api/ProductCarts/users/{userId}
+        [HttpGet("users/{userId}")]
+        public async Task<ActionResult<IEnumerable<ProductCart>>> GetListProductCartExistedByUserId(int userId)
+        {
+            if (UserExists(userId)) {
+                var productCarts = await _context.ProductCarts.Where(s => s.UserId == userId && s.Status.Equals(true)).ToListAsync();
+
+                if (productCarts == null || productCarts.Count == 0)
+                {
+                    return NotFound("User does not have product cart!");
+                }
+                return productCarts;
+            }else
+            {
+                return NotFound("User can not found by user id!");
+            }
+        }
+
+
         // PUT: api/ProductCarts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

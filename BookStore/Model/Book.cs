@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 #nullable disable
@@ -42,6 +43,8 @@ namespace BookStore.Model
         public virtual Category Category { get; set; }
         [InverseProperty(nameof(OrderDetail.Book))]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        
+        [JsonIgnore]
         [InverseProperty(nameof(ProductCart.Book))]
         public virtual ICollection<ProductCart> ProductCarts { get; set; }
     }
