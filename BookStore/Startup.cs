@@ -32,9 +32,6 @@ namespace BookStore
         {
             services.AddDbContext<BookContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("BookStoreDatabase")));
             services.AddControllersWithViews();
-            services.AddControllers().AddNewtonsoftJson(options =>
-    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-);
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {

@@ -46,7 +46,7 @@ namespace BookStore.Controllers
         public async Task<ActionResult<IEnumerable<ProductCart>>> GetListProductCartExistedByUserId(int userId)
         {
             if (UserExists(userId)) {
-                var productCarts = await _context.ProductCarts.Where(s => s.UserId == userId && s.Status.Equals(true)).ToListAsync();
+                var productCarts = await _context.ProductCarts.Where(s => s.UserId == userId && s.Status.Equals(true)).Include(s => s.Book).ToListAsync();
 
                 if (productCarts == null || productCarts.Count == 0)
                 {
