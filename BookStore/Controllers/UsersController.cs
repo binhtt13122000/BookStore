@@ -6,14 +6,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BookStore.Model;
-using BookStore.Services;
 using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Microsoft.AspNetCore.Authorization;
-using System.Net.Http.Headers;
 using System.Net.Http;
 using System.Web.Http.Results;
 using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
@@ -105,27 +102,12 @@ namespace BookStore.Controllers
                 var hashPassword = GetMD5(user.Password);
                 var CheckUser = await _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(user.Email) && u.Password.Equals(hashPassword));
                 if (CheckUser != null)
-                {
-                    var claims = new[]
-                    {
-                        new Claim("Id", CheckUser.Id.ToString()),
-                        new Claim("Name", CheckUser.Name),
-                        new Claim("Email", CheckUser.Email),
-                        new Claim("RoleId", CheckUser.RoleId.ToString()),
-                    };
-                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-                    var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-                    var token = new JwtSecurityToken(_configuration["Jwt:Issuer"], _configuration["Jwt:Audience"], claims, expires: DateTime.UtcNow.AddDays(1), signingCredentials: signIn);
-                    var cookie = new HttpCookie();
-                    cookie.Name = "Authorization";
-                    cookie.Value = new JwtSecurityTokenHandler().WriteToken(token).ToString();
-                    var resp = new HttpResponseMessage();
-                    HttpContext.Response.Cookies.Append(cookie.Name, cookie.Value, new CookieOptions { MaxAge = TimeSpan.FromDays(1), Path = "/api/login", HttpOnly = true });
-                    return Ok("Login is successfull");
+                { 
+                    return Ok(CheckUser);
                 }
                 else
                 {
-                    return BadRequest("Login is failed");
+                    return Unauthorized("Login is failed");
                 }
             }else
             {
