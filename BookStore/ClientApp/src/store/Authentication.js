@@ -3,6 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.reducer = exports.actionCreators = void 0;
 var axios_1 = require("axios");
 exports.actionCreators = {
+    logout: function () { return function (dispatch, getState) {
+        localStorage.clear();
+        dispatch({ type: "SUCCESS_LOGOUT" });
+    }; },
     login: function (authenticate, setError) { return function (dispatch, getState) {
         dispatch({ type: "REQUEST_AUTHENTICATE" });
         axios_1.default.post("/api/users/login", {

@@ -44,6 +44,10 @@ export interface FailLogout {
 type KnownAction = RequestLoginAction | LoginSuccessAction | LoginFailAction | RequestLogoutAction | SuccessLogout | FailLogout;
 
 export const actionCreators = {
+    logout: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
+        localStorage.clear();
+        dispatch({ type: "SUCCESS_LOGOUT" })
+    },
     login: (authenticate: Authenticate, setError: any): AppThunkAction<KnownAction> => (dispatch, getState) => {
         dispatch({ type: "REQUEST_AUTHENTICATE" })
         Axios.post("/api/users/login", {

@@ -46,6 +46,7 @@
     <None Remove="ClientApp\src\containers\SignUp\index.tsx" />
     <None Remove="ClientApp\src\store\Authentication.ts" />
     <None Remove="ClientApp\src\store\Books.ts" />
+    <None Remove="ClientApp\src\store\Category.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -56,6 +57,7 @@
     <TypeScriptCompile Include="ClientApp\src\containers\SignUp\index.tsx" />
     <TypeScriptCompile Include="ClientApp\src\store\Authentication.ts" />
     <TypeScriptCompile Include="ClientApp\src\store\Books.ts" />
+    <TypeScriptCompile Include="ClientApp\src\store\Category.ts" />
   </ItemGroup>
 
   <ItemGroup>
