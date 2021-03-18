@@ -11,7 +11,6 @@
 
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.2" />
-    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.4" />
@@ -40,6 +39,7 @@
 
   <ItemGroup>
     <None Remove="ClientApp\src\components\BookCard.tsx" />
+    <None Remove="ClientApp\src\components\SideBar.tsx" />
     <None Remove="ClientApp\src\containers\BookDetail\index.tsx" />
     <None Remove="ClientApp\src\containers\BookPage\index.tsx" />
     <None Remove="ClientApp\src\containers\Login\index.tsx" />
@@ -51,6 +51,7 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\src\components\BookCard.tsx" />
+    <TypeScriptCompile Include="ClientApp\src\components\SideBar.tsx" />
     <TypeScriptCompile Include="ClientApp\src\containers\BookDetail\index.tsx" />
     <TypeScriptCompile Include="ClientApp\src\containers\BookPage\index.tsx" />
     <TypeScriptCompile Include="ClientApp\src\containers\Login\index.tsx" />

@@ -24,7 +24,7 @@ const BookDetail = (props: BookProps) => {
         </div>
         <div className="right-column">
             <div className="product-description">
-                <span>Sách Tin Học</span>
+                <span>{props.books[0].category && props.books[0].category.name}</span>
                 <h1>{props.books[0] && props.books[0].name}</h1>
                 <h2>{props.books[0] && props.books[0].author}</h2>
                 <p>Sách độc quyền chỉ được bán tại BookStore với nhiều ưu đãi hấp dẫn!</p>

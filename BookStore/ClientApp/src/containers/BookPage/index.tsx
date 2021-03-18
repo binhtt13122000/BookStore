@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import { ApplicationState } from '../../store';
 import * as BookStore from '../../store/Books';
 import BookCard from '../../components/BookCard';
+import SideBar from '../../components/SideBar';
+import { Hidden } from '@material-ui/core';
 
 type BookProps = BookStore.BookState & typeof BookStore.actionCreators
 const BookPage = (props: BookProps) => {
@@ -23,15 +25,24 @@ const BookPage = (props: BookProps) => {
     const classes = useStyles();
 
     return (
-        <Container>
-            <Grid className={classes.center} container spacing={4}>
-                    {props.books.map((book, index) => {
-                        return <Grid item key={index} xs={ 12 } sm={ 4 }>
-                            <BookCard book={book} />
-                        </Grid>
-                    })}
+        <Grid container>
+            <Grid item md={3}>
+                <Hidden smDown>
+                    <SideBar />
+                </Hidden>
             </Grid>
-        </Container>
+            <Grid item xs={ 12 } md={ 9 }>
+                <Container>
+                    <Grid className={classes.center} container spacing={4}>
+                        {props.books.map((book, index) => {
+                            return <Grid item key={index} xs={12} sm={4}>
+                                <BookCard book={book} />
+                            </Grid>
+                        })}
+                    </Grid>
+                </Container>
+            </Grid>
+        </Grid>
     )
 }
 

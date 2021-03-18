@@ -39,7 +39,10 @@ export default function BookCard(props: any) {
                         Tác giả: { book.author }
                     </Typography>
                     <Typography variant="body2" color="textSecondary" component="p">
-                        Giá bán: {book.price}
+                        Loại sách: {book.category && book.category.name}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                        Giá bán: {book.price} VNĐ
                     </Typography>
                 </CardContent>
             </CardActionArea>

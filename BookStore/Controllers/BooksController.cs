@@ -26,7 +26,7 @@ namespace BookStore.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Book>>> GetBooks()
         {
-            return await _context.Books.ToListAsync();
+            return await _context.Books.Include(s => s.Category).ToListAsync();
         }
 
         // GET: api/Books/5
@@ -34,7 +34,7 @@ namespace BookStore.Controllers
         public async Task<ActionResult<Book>> GetBook(int id)
         {
 
-            var book = await _context.Books.FindAsync(id);
+            var book = await _context.Books.Include(s => s.Category).FirstOrDefaultAsync(i => i.Id == id);
 
             if (book == null)
             {

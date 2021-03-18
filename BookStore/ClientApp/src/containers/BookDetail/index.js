@@ -19,7 +19,7 @@ var BookDetail = function (props) {
             React.createElement("img", { className: "active", src: "https://1.bp.blogspot.com/-Yqc7dYMjV4k/WPByXopDvrI/AAAAAAAAIWU/d-z3mInf5YIvjSYK2XCVQi_QBhB-HHM-gCLcB/s320/The%2BObject%2BOriented%2Bthought%2Bprocess.jpeg", alt: "Book", width: "80%" })),
         React.createElement("div", { className: "right-column" },
             React.createElement("div", { className: "product-description" },
-                React.createElement("span", null, "S\u00E1ch Tin H\u1ECDc"),
+                React.createElement("span", null, props.books[0].category && props.books[0].category.name),
                 React.createElement("h1", null, props.books[0] && props.books[0].name),
                 React.createElement("h2", null, props.books[0] && props.books[0].author),
                 React.createElement("p", null, "S\u00E1ch \u0111\u1ED9c quy\u1EC1n ch\u1EC9 \u0111\u01B0\u1EE3c b\u00E1n t\u1EA1i BookStore v\u1EDBi nhi\u1EC1u \u01B0u \u0111\u00E3i h\u1EA5p d\u1EABn!"),

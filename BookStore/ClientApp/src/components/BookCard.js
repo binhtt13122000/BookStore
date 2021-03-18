@@ -30,8 +30,12 @@ function BookCard(props) {
                     "T\u00E1c gi\u1EA3: ",
                     book.author),
                 React.createElement(Typography_1.default, { variant: "body2", color: "textSecondary", component: "p" },
+                    "Lo\u1EA1i s\u00E1ch: ",
+                    book.category && book.category.name),
+                React.createElement(Typography_1.default, { variant: "body2", color: "textSecondary", component: "p" },
                     "Gi\u00E1 b\u00E1n: ",
-                    book.price))),
+                    book.price,
+                    " VN\u0110"))),
         React.createElement(CardActions_1.default, null,
             React.createElement(Grid_1.default, { container: true, justify: "flex-end" },
                 React.createElement(Button_1.default, { variant: "contained", size: "small", color: "primary" }, "Add to Cart")))));
