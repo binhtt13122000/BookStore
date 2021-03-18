@@ -39,14 +39,22 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\src\components\BookCard.tsx" />
+    <None Remove="ClientApp\src\containers\BookDetail\index.tsx" />
+    <None Remove="ClientApp\src\containers\BookPage\index.tsx" />
     <None Remove="ClientApp\src\containers\Login\index.tsx" />
     <None Remove="ClientApp\src\containers\SignUp\index.tsx" />
+    <None Remove="ClientApp\src\store\Authentication.ts" />
     <None Remove="ClientApp\src\store\Books.ts" />
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\components\BookCard.tsx" />
+    <TypeScriptCompile Include="ClientApp\src\containers\BookDetail\index.tsx" />
+    <TypeScriptCompile Include="ClientApp\src\containers\BookPage\index.tsx" />
     <TypeScriptCompile Include="ClientApp\src\containers\Login\index.tsx" />
     <TypeScriptCompile Include="ClientApp\src\containers\SignUp\index.tsx" />
+    <TypeScriptCompile Include="ClientApp\src\store\Authentication.ts" />
     <TypeScriptCompile Include="ClientApp\src\store\Books.ts" />
   </ItemGroup>
 

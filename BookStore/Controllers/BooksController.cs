@@ -33,6 +33,7 @@ namespace BookStore.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Book>> GetBook(int id)
         {
+
             var book = await _context.Books.FindAsync(id);
 
             if (book == null)

@@ -17,7 +17,7 @@ using System.Security.Cryptography;
 
 namespace BookStore.Controllers
 {
- public partial class AuthenticateRequest
+    public partial class AuthenticateRequest
     {
         public String Email { get; set; }
         public String Password { get; set; }
@@ -51,7 +51,7 @@ namespace BookStore.Controllers
             {
                 return NotFound();
             }
-
+            user.Password = "";
             return user;
         }
 
@@ -96,26 +96,26 @@ namespace BookStore.Controllers
             if(user != null && user.Email != null && user.Password != null)
             {
                 var CheckUser = await _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(user.Email));
-                if(BCrypt.Net.BCrypt.Verify(user.Password, CheckUser.Password))
+                if(CheckUser != null && BCrypt.Net.BCrypt.Verify(user.Password, CheckUser.Password))
                 {
                     if (CheckUser != null)
                     {
-                        var claims = new[]
-                        {
-                        new Claim("Id", CheckUser.Id.ToString()),
-                        new Claim("Name", CheckUser.Name),
-                        new Claim("Email", CheckUser.Email),
-                        new Claim("RoleId", CheckUser.RoleId.ToString()),
-                    };
-                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-                        var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-                        var token = new JwtSecurityToken(_configuration["Jwt:Issuer"], _configuration["Jwt:Audience"], claims, expires: DateTime.UtcNow.AddDays(1), signingCredentials: signIn);
-                        var cookie = new HttpCookie();
-                        cookie.Name = "Authorization";
-                        cookie.Value = new JwtSecurityTokenHandler().WriteToken(token).ToString();
-                        var resp = new HttpResponseMessage();
-                        HttpContext.Response.Cookies.Append(cookie.Name, cookie.Value, new CookieOptions { MaxAge = TimeSpan.FromDays(1), Path = "/api/login", HttpOnly = true });
-
+                        //var claims = new[]
+                        //{
+                        //new Claim("Id", CheckUser.Id.ToString()),
+                        //new Claim("Name", CheckUser.Name),
+                        //new Claim("Email", CheckUser.Email),
+                        //new Claim("RoleId", CheckUser.RoleId.ToString()),
+                        //};
+                        //var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+                        //var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                        //var token = new JwtSecurityToken(_configuration["Jwt:Issuer"], _configuration["Jwt:Audience"], claims, expires: DateTime.UtcNow.AddDays(1), signingCredentials: signIn);
+                        //var cookie = new HttpCookie();
+                        //cookie.Name = "Authorization";
+                        //cookie.Value = new JwtSecurityTokenHandler().WriteToken(token).ToString();
+                        //var resp = new HttpResponseMessage();
+                        //HttpContext.Response.Cookies.Append(cookie.Name, cookie.Value, new CookieOptions { MaxAge = TimeSpan.FromDays(1), Path = "/api/login", HttpOnly = true });
+                        CheckUser.Password = null;
                         return Ok(CheckUser);
                     }
                     else
