@@ -49,6 +49,7 @@ namespace BookStore.Model
         [ForeignKey(nameof(RoleId))]
         [InverseProperty("Users")]
         public virtual Role Role { get; set; }
+        
         [InverseProperty(nameof(Order.User))]
         public virtual ICollection<Order> Orders { get; set; }
         [InverseProperty(nameof(ProductCart.User))]

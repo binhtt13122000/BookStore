@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 #nullable disable
 
@@ -14,6 +11,11 @@ namespace BookStore.Model
         [Key]
         [Column("id")]
         public int Id { get; set; }
+
+        public ProductCart()
+        {
+        }
+
         [Column("userId")]
         public int? UserId { get; set; }
         [Column("bookId")]
@@ -25,9 +27,10 @@ namespace BookStore.Model
 
         [ForeignKey(nameof(BookId))]
         [InverseProperty("ProductCarts")]
-        public virtual Book Book { get; set; }
+        public Book Book { get; set; }
+        
         [ForeignKey(nameof(UserId))]
         [InverseProperty("ProductCarts")]
-        public virtual User User { get; set; }
+        public User User { get; set; }
     }
 }

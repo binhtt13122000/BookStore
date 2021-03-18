@@ -15,6 +15,7 @@ import { connect } from 'react-redux';
 import * as AuthenticationStore from '../../store/Authentication';
 import { ApplicationState } from '../../store';
 import { useForm } from 'react-hook-form'
+import { Redirect, useHistory } from 'react-router';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -61,25 +62,33 @@ type AuthenticateProps = AuthenticationStore.AuthenticateState & typeof Authenti
 
 function Login(props: AuthenticateProps) {
     const classes = useStyles();
+    const history = useHistory();
     const { errors, setError, register, handleSubmit, clearErrors } = useForm();
-
     React.useEffect(() => {
         if (!props.status) {
-            console.log("chua dang nhap")
+            console.log("chua dang nhap");
+            return;
+        } else {
+            if (props.authenticate.roleId === 1) {
+                history.push("/home")
+            } else {
+                history.push("/admin/home");
+            }
         }
     }, [])
     const submitHandler = (data: AuthenticationStore.Authenticate) => {
-        console.log(10);
+        console.log(props);
         clearErrors();
         props.login(data, setError);
-        console.log(props.authenticate);
-        console.log(props.status);
     }
 
     if (props.status) {
-        return <div>a</div>
+        if (props.authenticate.roleId === 1) {
+            return <Redirect to="/home" />
+        } else {
+            return <Redirect to="/admin/home" />
+        }
     }
-
     return (
         <Grid container component="main" className={classes.root}>
             <CssBaseline />
@@ -136,18 +145,14 @@ function Login(props: AuthenticateProps) {
                             color="primary"
                             className={classes.submit}
                         >
-                            Sign In
+                            {props.isLoading ? "Loading" : "Sign In"}
                         </Button>
+                    </form>
                         <Grid container>
-                            <Grid item xs>
-                                <Link href="#" variant="body2">
-                                    Forgot password?
-                                </Link>
-                            </Grid>
-                            <Grid item>
-                                <Link href="/signup" variant="body2">
-                                    {"Don't have an account? Sign Up"}
-                                </Link>
+                        <Grid item onClick={() => history.push("/signup")}>
+                            <Typography style={{'cursor': 'pointer'}} color="primary" variant="body2">
+                                {"Don't have an account? Sign Up"}
+                            </Typography>
                             </Grid>
                         </Grid>
                         <Box mt={5}>
@@ -160,7 +165,6 @@ function Login(props: AuthenticateProps) {
                                 {'.'}
                             </Typography>
                         </Box>
-                    </form>
                 </div>
             </Grid>
         </Grid>

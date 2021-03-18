@@ -12,16 +12,12 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Net.Http;
-using System.Web.Http.Results;
-using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
-using ServiceStack;
-using System.Net;
 using RestSharp;
 using System.Security.Cryptography;
 
 namespace BookStore.Controllers
 {
- public partial class AuthenticateRequest
+    public partial class AuthenticateRequest
     {
         public String Email { get; set; }
         public String Password { get; set; }
@@ -55,7 +51,7 @@ namespace BookStore.Controllers
             {
                 return NotFound();
             }
-
+            user.Password = "";
             return user;
         }
 
@@ -99,15 +95,37 @@ namespace BookStore.Controllers
         {
             if(user != null && user.Email != null && user.Password != null)
             {
-                var hashPassword = GetMD5(user.Password);
-                var CheckUser = await _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(user.Email) && u.Password.Equals(hashPassword));
-                if (CheckUser != null)
-                { 
-                    return Ok(CheckUser);
-                }
-                else
+                var CheckUser = await _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(user.Email));
+                if(CheckUser != null && BCrypt.Net.BCrypt.Verify(user.Password, CheckUser.Password))
                 {
-                    return Unauthorized("Login is failed");
+                    if (CheckUser != null)
+                    {
+                        //var claims = new[]
+                        //{
+                        //new Claim("Id", CheckUser.Id.ToString()),
+                        //new Claim("Name", CheckUser.Name),
+                        //new Claim("Email", CheckUser.Email),
+                        //new Claim("RoleId", CheckUser.RoleId.ToString()),
+                        //};
+                        //var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+                        //var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                        //var token = new JwtSecurityToken(_configuration["Jwt:Issuer"], _configuration["Jwt:Audience"], claims, expires: DateTime.UtcNow.AddDays(1), signingCredentials: signIn);
+                        //var cookie = new HttpCookie();
+                        //cookie.Name = "Authorization";
+                        //cookie.Value = new JwtSecurityTokenHandler().WriteToken(token).ToString();
+                        //var resp = new HttpResponseMessage();
+                        //HttpContext.Response.Cookies.Append(cookie.Name, cookie.Value, new CookieOptions { MaxAge = TimeSpan.FromDays(1), Path = "/api/login", HttpOnly = true });
+                        CheckUser.Password = null;
+                        return Ok(CheckUser);
+                    }
+                    else
+                    {
+                        return BadRequest("Login is failed!");
+                    }
+                }
+               else
+                {
+                    return BadRequest("Login is failed!");
                 }
             }else
             {
@@ -123,11 +141,11 @@ namespace BookStore.Controllers
             var user = await _context.Users.FindAsync(id);
             if(user != null)
             {
-                //var cookie = Request.Cookies["Authorization"];
-                //if (cookie != null)
-                //{
+                var cookie = Request.Cookies["Authorization"];
+               // if (cookie != null)
+               // {
                     //HttpContext.Response.Cookies.Delete("Authorization");
-                    return Ok("Logout successfull.");
+                    return Ok(cookie);
                 //}
                 
             }
@@ -155,7 +173,8 @@ namespace BookStore.Controllers
                 return BadRequest("Email have been registered!");
             }else
             {
-                user.Password = GetMD5(user.Password);
+                user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+                user.RoleId = 1;
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
                 return Ok("Create new user successfully!");
@@ -203,20 +222,7 @@ namespace BookStore.Controllers
             return _context.Users.Any(e => e.Email.Equals(Email));
         }
 
-        public static string GetMD5(string str)
-        {
-            MD5 md5 = new MD5CryptoServiceProvider();
-            byte[] fromData = Encoding.UTF8.GetBytes(str);
-            byte[] targetData = md5.ComputeHash(fromData);
-            string byte2String = null;
 
-            for (int i = 0; i < targetData.Length; i++)
-            {
-                byte2String += targetData[i].ToString("x2");
-
-            }
-            return byte2String;
-        }
 
     }
 }
