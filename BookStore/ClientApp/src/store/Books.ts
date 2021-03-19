@@ -1,5 +1,8 @@
-﻿import { Action, Reducer } from 'redux';
+﻿import { Book } from '@material-ui/icons';
+import axios from 'axios';
+import { Action, Reducer } from 'redux';
 import { AppThunkAction } from './';
+import { Promise } from 'es6-promise'
 
 export interface BookState {
     isLoading: boolean;
@@ -63,6 +66,36 @@ export const actionCreators = {
                 dispatch({ type: 'RECEIVE_BOOK', books: [data] });
             });
         dispatch({ type: 'REQUEST_BOOK' });
+    },
+
+    requestBookByCategory: (arrayOfIndex: number[]): AppThunkAction<KnownAction> => (dispatch, getState) => {
+        console.log(arrayOfIndex);
+        if (arrayOfIndex.length === 1 && arrayOfIndex[0] === 0) {
+            fetch(`api/Books`)
+                .then(response => response.json() as Promise<Book[]>)
+                .then(data => {
+                    dispatch({ type: 'RECEIVE_BOOK', books: data });
+                });
+
+            dispatch({ type: 'REQUEST_BOOK' });
+        } else {
+            const promise = arrayOfIndex.filter(item => item !== 0).map(item => {
+                console.log(item);
+                return axios.get(`api/categories/${item}/books`).then(response => {
+                    if (response.status === 200) {
+                        return [...response.data];
+                    }
+                });
+            })
+            Promise.all(promise)
+                .then((result: any) => {
+                    let books = result.flat();
+                    console.log(books);
+                    dispatch({ type: 'RECEIVE_BOOK', books: books });
+                })
+                .catch(e => console.log(e))
+            dispatch({ type: 'REQUEST_BOOK' });
+        }
     },
 
     createBooks: (book: Book, resolve: any): AppThunkAction<KnownAction> => (dispatch, getState) => {

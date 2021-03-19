@@ -8,6 +8,8 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.reducer = exports.actionCreators = void 0;
+var axios_1 = require("axios");
+var es6_promise_1 = require("es6-promise");
 exports.actionCreators = {
     requestBooks: function () { return function (dispatch, getState) {
         fetch("api/Books")
@@ -24,6 +26,35 @@ exports.actionCreators = {
             dispatch({ type: 'RECEIVE_BOOK', books: [data] });
         });
         dispatch({ type: 'REQUEST_BOOK' });
+    }; },
+    requestBookByCategory: function (arrayOfIndex) { return function (dispatch, getState) {
+        console.log(arrayOfIndex);
+        if (arrayOfIndex.length === 1 && arrayOfIndex[0] === 0) {
+            fetch("api/Books")
+                .then(function (response) { return response.json(); })
+                .then(function (data) {
+                dispatch({ type: 'RECEIVE_BOOK', books: data });
+            });
+            dispatch({ type: 'REQUEST_BOOK' });
+        }
+        else {
+            var promise = arrayOfIndex.filter(function (item) { return item !== 0; }).map(function (item) {
+                console.log(item);
+                return axios_1.default.get("api/categories/" + item + "/books").then(function (response) {
+                    if (response.status === 200) {
+                        return __spreadArrays(response.data);
+                    }
+                });
+            });
+            es6_promise_1.Promise.all(promise)
+                .then(function (result) {
+                var books = result.flat();
+                console.log(books);
+                dispatch({ type: 'RECEIVE_BOOK', books: books });
+            })
+                .catch(function (e) { return console.log(e); });
+            dispatch({ type: 'REQUEST_BOOK' });
+        }
     }; },
     createBooks: function (book, resolve) { return function (dispatch, getState) {
         book.categoryId = 1;

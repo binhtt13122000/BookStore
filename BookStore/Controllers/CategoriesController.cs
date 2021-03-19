@@ -41,6 +41,16 @@ namespace BookStore.Controllers
             return category;
         }
 
+        // GET: api/Categories/1/Books
+        [HttpGet("{id}/books")]
+        public async Task<ActionResult<IEnumerable<Book>>> GetBookByCategory(int id)
+        {
+
+            var books = await _context.Books.Where(s => s.CategoryId == id).Include(s => s.Category).ToListAsync();
+
+            return books;
+        }
+
         // PUT: api/Categories/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

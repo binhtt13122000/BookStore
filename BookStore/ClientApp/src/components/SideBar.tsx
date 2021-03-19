@@ -7,6 +7,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 import { connect } from 'react-redux';
 import * as CategoryStore from '../store/Category';
+import * as BookStore from '../store/Books';
 import { ApplicationState } from '../store';
 import { Typography } from '@material-ui/core';
 const useStyles = makeStyles((theme: Theme) =>
@@ -18,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-type CategoryProps = CategoryStore.CategoryState;
+type CategoryProps = CategoryStore.CategoryState & BookStore.BookState & typeof BookStore.actionCreators;
 function CheckboxList(props: CategoryProps) {
     const classes = useStyles();
     const [checked, setChecked] = React.useState([0]);
@@ -31,6 +32,8 @@ function CheckboxList(props: CategoryProps) {
         } else {
             newChecked.splice(currentIndex, 1);
         }
+        console.log(newChecked);
+        props.requestBookByCategory(newChecked);
         setChecked(newChecked);
     };
 
@@ -62,4 +65,5 @@ function CheckboxList(props: CategoryProps) {
 
 export default connect(
     (state: ApplicationState) => state.categories,
+    BookStore.actionCreators
 )(CheckboxList as any);

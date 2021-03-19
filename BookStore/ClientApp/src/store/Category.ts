@@ -7,7 +7,7 @@ export interface CategoryState {
 }
 
 export interface Category {
-    id: int;
+    id: number;
     name: string;
 }
 

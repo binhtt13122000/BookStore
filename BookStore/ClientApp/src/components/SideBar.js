@@ -15,6 +15,7 @@ var ListItemIcon_1 = require("@material-ui/core/ListItemIcon");
 var ListItemText_1 = require("@material-ui/core/ListItemText");
 var Checkbox_1 = require("@material-ui/core/Checkbox");
 var react_redux_1 = require("react-redux");
+var BookStore = require("../store/Books");
 var core_1 = require("@material-ui/core");
 var useStyles = styles_1.makeStyles(function (theme) {
     return styles_1.createStyles({
@@ -36,6 +37,8 @@ function CheckboxList(props) {
         else {
             newChecked.splice(currentIndex, 1);
         }
+        console.log(newChecked);
+        props.requestBookByCategory(newChecked);
         setChecked(newChecked);
     }; };
     return (React.createElement(React.Fragment, null,
@@ -48,5 +51,5 @@ function CheckboxList(props) {
                 React.createElement(ListItemText_1.default, { id: labelId, primary: "" + category.name })));
         }))));
 }
-exports.default = react_redux_1.connect(function (state) { return state.categories; })(CheckboxList);
+exports.default = react_redux_1.connect(function (state) { return state.categories; }, BookStore.actionCreators)(CheckboxList);
 //# sourceMappingURL=SideBar.js.map
