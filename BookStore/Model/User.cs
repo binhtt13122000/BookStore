@@ -29,7 +29,6 @@ namespace BookStore.Model
         [RegularExpression(@"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}")]
         public string Email { get; set; }
         
-        [JsonIgnore]
         [Required]
         [Column("password")]
         [StringLength(100, MinimumLength =5)]

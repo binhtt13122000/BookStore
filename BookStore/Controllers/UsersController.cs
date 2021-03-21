@@ -115,7 +115,7 @@ namespace BookStore.Controllers
                         cookie.Value = new JwtSecurityTokenHandler().WriteToken(token).ToString();
                         var resp = new HttpResponseMessage();
                         HttpContext.Response.Cookies.Append(cookie.Name, cookie.Value, new CookieOptions { MaxAge = TimeSpan.FromDays(1), Path = "/api/login", HttpOnly = true });
-
+                        CheckUser.Password = "";
                         return Ok(CheckUser);
                     }
                     else
