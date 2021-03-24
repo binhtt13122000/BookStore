@@ -34,6 +34,20 @@ exports.actionCreators = {
             resolve();
         });
     }; },
+    updateCart: function (newData, id, index, quantity, resolve) { return function (dispatch, getSetter) {
+        axios_1.default.put("/api/productcarts/" + id, __assign({}, newData))
+            .then(function (request) {
+            console.log(request);
+            if (request.status === 204) {
+                dispatch({ type: 'UPDATE_ITEM_IN_CART', id: index, quantity: quantity });
+            }
+            resolve();
+        }).
+            catch(function (ex) {
+            console.log(ex);
+            resolve();
+        });
+    }; },
     requestCart: function (id) { return function (dispath, getState) {
         axios_1.default.get("api/productcarts/users/" + id)
             .then(function (response) {
@@ -45,7 +59,7 @@ exports.actionCreators = {
         dispath({ type: 'REQUEST_CART' });
     }; },
     addToCart: function (cartDetail) { return function (dispatch, getState) {
-        axios_1.default.post("api/productcarts", __assign({}, cartDetail))
+        axios_1.default.post("api/productcarts/users/" + cartDetail.userId + "/books/" + cartDetail.bookId + "?quantity=1")
             .then(function (response) {
             console.log(response);
             if (response.status === 200) {
@@ -82,7 +96,6 @@ var reducer = function (state, incomingAction) {
             };
         case "ADD_TO_CART_SUCCESS":
             var cartDetails = __spreadArrays(state.cartDetails);
-            cartDetails.push(action.cartDetail);
             return {
                 isLoading: false,
                 cartDetails: cartDetails
@@ -100,8 +113,7 @@ var reducer = function (state, incomingAction) {
             };
         case "UPDATE_ITEM_IN_CART":
             var updatedCartDetails = __spreadArrays(state.cartDetails);
-            var index = 1;
-            updatedCartDetails[index] = action.cartDetail;
+            updatedCartDetails[action.id].quantity = action.quantity;
             return {
                 isLoading: false,
                 cartDetails: updatedCartDetails

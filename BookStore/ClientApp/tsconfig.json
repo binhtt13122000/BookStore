@@ -12,7 +12,7 @@
     "noEmit": true,
     "jsx": "preserve",
     "lib": [
-      "ES2018",
+      "ES2019",
       "dom"
     ],
     "skipLibCheck": false,

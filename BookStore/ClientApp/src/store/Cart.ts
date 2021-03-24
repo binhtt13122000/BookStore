@@ -1,4 +1,5 @@
-﻿import axios from 'axios';
+﻿import { red } from '@material-ui/core/colors';
+import axios from 'axios';
 import { Action, Reducer } from 'redux';
 import { AppThunkAction } from './';
 
@@ -44,7 +45,8 @@ export interface RemoveFromCart {
 
 export interface UpdateCart {
     type: "UPDATE_ITEM_IN_CART";
-    cartDetail: CartDetail;
+    id: number;
+    quantity: number;
 }
 
 export interface DeleteCart {
@@ -68,6 +70,20 @@ export const actionCreators = {
                 resolve();
             })
     },
+    updateCart: (newData: CartDetail, id: number, index: number, quantity: number, resolve: any): AppThunkAction<KnownAction> => (dispatch, getSetter) => {
+        axios.put(`/api/productcarts/${id}`, { ...newData })
+            .then(request => {
+                console.log(request)
+                if (request.status === 204) {
+                    dispatch({ type: 'UPDATE_ITEM_IN_CART', id: index, quantity: quantity });
+                }
+                resolve();
+            }).
+            catch(ex => {
+                console.log(ex);
+                resolve();
+            })
+    },
     requestCart: (id: number): AppThunkAction<KnownAction> => (dispath, getState) => {
         axios.get(`api/productcarts/users/${id}`)
             .then(response => {
@@ -80,7 +96,7 @@ export const actionCreators = {
     },
 
     addToCart: (cartDetail: CartDetail): AppThunkAction<KnownAction> => (dispatch, getState) => {
-        axios.post("api/productcarts", { ...cartDetail })
+        axios.post(`api/productcarts/users/${cartDetail.userId}/books/${cartDetail.bookId}?quantity=1`)
             .then(response => {
                 console.log(response);
                 if (response.status === 200) {
@@ -120,7 +136,6 @@ export const reducer: Reducer<CartState> = (state: CartState | undefined, incomi
             }
         case "ADD_TO_CART_SUCCESS":
             let cartDetails = [...state.cartDetails];
-            cartDetails.push(action.cartDetail);
             return {
                 isLoading: false,
                 cartDetails: cartDetails
@@ -138,8 +153,7 @@ export const reducer: Reducer<CartState> = (state: CartState | undefined, incomi
             };
         case "UPDATE_ITEM_IN_CART":
             let updatedCartDetails = [...state.cartDetails];
-            let index = 1;
-            updatedCartDetails[index] = action.cartDetail;
+            updatedCartDetails[action.id].quantity = action.quantity;
             return {
                 isLoading: false,
                 cartDetails: updatedCartDetails
