@@ -68,17 +68,6 @@ function SignUp(props: AuthenticateProps) {
     const { handleSubmit, clearErrors, errors, setError, register, watch } = useForm();
     const password = React.useRef({});
     password.current = watch("password", "");
-    React.useEffect(() => {
-        if (!props.status) {
-            console.log("chua dang nhap")
-        } else {
-            if (props.authenticate.roleId === 1) {
-                history.push("/home")
-            } else {
-                history.push("/admin/home");
-            }
-        }
-    }, [])
 
     const [loading, setLoading] = React.useState(false);
 
@@ -121,7 +110,6 @@ function SignUp(props: AuthenticateProps) {
         </Typography>
                 <form className={classes.form} noValidate onSubmit={handleSubmit(submitHandler)}>
                     <Grid container spacing={2}>
-                        
                         <Grid item xs={12}>
                             <TextField
                                 variant="outlined"

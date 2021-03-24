@@ -37,6 +37,9 @@ const NavMenu = (props: AuthenticateProps) => {
                                 <NavItem>
                                     <NavLink tag={Link} className="text-dark" to="/counter">Users</NavLink>
                                 </NavItem>
+                                {props.authenticate.roleId === 1 ? < NavItem >
+                                    <NavLink tag={Link} className="text-dark" to="/cart">Shopping Cart</NavLink>
+                                </NavItem> : null}
                                 <NavItem>
                                     <NavLink tag={Link} className="text-dark" to="/fetch-data">Order History</NavLink>
                                 </NavItem>

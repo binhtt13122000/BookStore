@@ -50,31 +50,33 @@ type KnownAction = RequestBookAction | ReceiveBookAction | AddBookAction | Updat
 
 export const actionCreators = {
     requestBooks: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
-        fetch(`api/Books`)
-            .then(response => response.json() as Promise<Book[]>)
-            .then(data => {
-                dispatch({ type: 'RECEIVE_BOOK', books: data });
+        axios.get(`api/Books`)
+            .then(response => {
+                if (response.status === 200) {
+                    dispatch({ type: 'RECEIVE_BOOK', books: response.data });
+                }
             });
 
         dispatch({ type: 'REQUEST_BOOK' });
     },
 
     requestBook: (id: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
-        fetch(`api/Books/${id}`)
-            .then(response => response.json() as Promise<Book>)
-            .then(data => {
-                dispatch({ type: 'RECEIVE_BOOK', books: [data] });
+        axios.get(`api/Books/${id}`)
+            .then(response => {
+                if (response.status === 200) {
+                    dispatch({ type: 'RECEIVE_BOOK', books: [response.data] });
+                }
             });
         dispatch({ type: 'REQUEST_BOOK' });
     },
 
     requestBookByCategory: (arrayOfIndex: number[]): AppThunkAction<KnownAction> => (dispatch, getState) => {
-        console.log(arrayOfIndex);
         if (arrayOfIndex.length === 1 && arrayOfIndex[0] === 0) {
-            fetch(`api/Books`)
-                .then(response => response.json() as Promise<Book[]>)
-                .then(data => {
-                    dispatch({ type: 'RECEIVE_BOOK', books: data });
+            axios.get(`api/Books`)
+                .then(response => {
+                    if (response.status === 200) {
+                        dispatch({ type: 'RECEIVE_BOOK', books: response.data });
+                    }
                 });
 
             dispatch({ type: 'REQUEST_BOOK' });
@@ -99,18 +101,12 @@ export const actionCreators = {
     },
 
     createBooks: (book: Book, resolve: any): AppThunkAction<KnownAction> => (dispatch, getState) => {
-        book.categoryId = 1;
-        fetch(`api/Books`, {
-            method: 'post',
-            body: JSON.stringify(book),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(response => response.json() as Promise<Book>)
-            .then(data => {
-                dispatch({ type: 'ADD_BOOK', newBook: data });
-                resolve();
+        axios.post(`api/Books`, {...book})
+            .then(response => {
+                if (response.status === 200) {
+                    dispatch({ type: 'ADD_BOOK', newBook: response.data });
+                    resolve();
+                }
             })
             .catch(err => {
                 resolve();
@@ -120,14 +116,7 @@ export const actionCreators = {
     },
 
     updateBooks: (newBook: Book, oldBook: any, resolve: any): AppThunkAction<KnownAction> => (dispatch, getState) => {
-        newBook.categoryId = 1;
-        fetch(`api/Books/${oldBook.id}`, {
-            method: 'put',
-            body: JSON.stringify(newBook),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
+        axios.put(`api/Books/${oldBook.id}`, { ...newBook })
             .then(response => {
                 if (response.status === 204) {
                     dispatch({ type: "UPDATE_BOOK", updateBook: newBook, index: oldBook.tableData.id })

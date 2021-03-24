@@ -4,19 +4,30 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store';
 import * as BookStore from '../../store/Books';
+import * as CartStore from '../../store/Cart';
+import * as AuthenticateStore from '../../store/Authentication';
 import { RouteComponentProps } from 'react-router';
 
-type BookProps = BookStore.BookState & typeof BookStore.actionCreators & RouteComponentProps;
+const creator = { ...BookStore.actionCreators, ...CartStore.actionCreators };
+type BookProps = BookStore.BookState & typeof creator & RouteComponentProps & AuthenticateStore.AuthenticateState;
 const BookDetail = (props: BookProps) => {
     React.useEffect(() => {
         const id = props.location.pathname.substring(props.location.pathname.lastIndexOf("/") + 1);
-        props.requestBook(parseInt(id));
+        props.requestBook(parseInt(id))
     }, []);
 
     if (props.isLoading) {
         return <Grid container justify="center" style={{ 'marginTop': '20vh' }}>
             <Typography>Loading...</Typography>
         </Grid>
+    }
+
+    const addToCart = () => {
+        props.addToCart({
+            userId: props.authenticate.id || -1,
+            bookId: parseInt(props.location.pathname.substring(props.location.pathname.lastIndexOf("/") + 1)),
+            quantity: 1
+        })
     }
     return <main className="container">
         <div className="left-column">
@@ -32,12 +43,16 @@ const BookDetail = (props: BookProps) => {
             </div>
             <div className="product-price">
                 <span>{props.books[0] && props.books[0].price} VNĐ</span>
-                <a href="#" className="cart-btn">Add to cart</a>
+                <button onClick={ addToCart } className="cart-btn">Add to cart</button>
             </div>
         </div>
     </main>
 }
+
 export default connect(
-    (state: ApplicationState) => state.books,
-    BookStore.actionCreators
+    (state: ApplicationState) => {
+        return { ...state.books, ...state.authenticate }
+    },
+    { ...BookStore.actionCreators, ...CartStore.actionCreators }
 )(BookDetail as any)
+

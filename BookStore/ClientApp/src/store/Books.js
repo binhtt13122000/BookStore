@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __spreadArrays = (this && this.__spreadArrays) || function () {
     for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
     for (var r = Array(s), k = 0, i = 0; i < il; i++)
@@ -12,28 +23,30 @@ var axios_1 = require("axios");
 var es6_promise_1 = require("es6-promise");
 exports.actionCreators = {
     requestBooks: function () { return function (dispatch, getState) {
-        fetch("api/Books")
-            .then(function (response) { return response.json(); })
-            .then(function (data) {
-            dispatch({ type: 'RECEIVE_BOOK', books: data });
+        axios_1.default.get("api/Books")
+            .then(function (response) {
+            if (response.status === 200) {
+                dispatch({ type: 'RECEIVE_BOOK', books: response.data });
+            }
         });
         dispatch({ type: 'REQUEST_BOOK' });
     }; },
     requestBook: function (id) { return function (dispatch, getState) {
-        fetch("api/Books/" + id)
-            .then(function (response) { return response.json(); })
-            .then(function (data) {
-            dispatch({ type: 'RECEIVE_BOOK', books: [data] });
+        axios_1.default.get("api/Books/" + id)
+            .then(function (response) {
+            if (response.status === 200) {
+                dispatch({ type: 'RECEIVE_BOOK', books: [response.data] });
+            }
         });
         dispatch({ type: 'REQUEST_BOOK' });
     }; },
     requestBookByCategory: function (arrayOfIndex) { return function (dispatch, getState) {
-        console.log(arrayOfIndex);
         if (arrayOfIndex.length === 1 && arrayOfIndex[0] === 0) {
-            fetch("api/Books")
-                .then(function (response) { return response.json(); })
-                .then(function (data) {
-                dispatch({ type: 'RECEIVE_BOOK', books: data });
+            axios_1.default.get("api/Books")
+                .then(function (response) {
+                if (response.status === 200) {
+                    dispatch({ type: 'RECEIVE_BOOK', books: response.data });
+                }
             });
             dispatch({ type: 'REQUEST_BOOK' });
         }
@@ -57,18 +70,12 @@ exports.actionCreators = {
         }
     }; },
     createBooks: function (book, resolve) { return function (dispatch, getState) {
-        book.categoryId = 1;
-        fetch("api/Books", {
-            method: 'post',
-            body: JSON.stringify(book),
-            headers: {
-                'Content-Type': 'application/json'
+        axios_1.default.post("api/Books", __assign({}, book))
+            .then(function (response) {
+            if (response.status === 200) {
+                dispatch({ type: 'ADD_BOOK', newBook: response.data });
+                resolve();
             }
-        })
-            .then(function (response) { return response.json(); })
-            .then(function (data) {
-            dispatch({ type: 'ADD_BOOK', newBook: data });
-            resolve();
         })
             .catch(function (err) {
             resolve();
@@ -76,14 +83,7 @@ exports.actionCreators = {
         });
     }; },
     updateBooks: function (newBook, oldBook, resolve) { return function (dispatch, getState) {
-        newBook.categoryId = 1;
-        fetch("api/Books/" + oldBook.id, {
-            method: 'put',
-            body: JSON.stringify(newBook),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
+        axios_1.default.put("api/Books/" + oldBook.id, __assign({}, newBook))
             .then(function (response) {
             if (response.status === 204) {
                 dispatch({ type: "UPDATE_BOOK", updateBook: newBook, index: oldBook.tableData.id });

@@ -1,43 +1,44 @@
 import * as React from 'react';
-import { Route } from 'react-router';
 import { Switch } from 'react-router-dom';
 import Layout from './components/Layout';
-import Home from './components/Home';
 import Login from './containers/Login';
 import Counter from './components/Counter';
-import FetchData from './components/FetchData';
 import './custom.css'
 import SignUp from './containers/SignUp';
-import { BrowserRouter } from 'react-router-dom';
 import BookManage from './containers/BookManage';
 import BookPage from './containers/BookPage';
 import BookDetail from './containers/BookDetail';
 import * as CategoryStore from './store/Category';
 import { ApplicationState } from './store';
 import { connect } from 'react-redux';
+import { PublicRoute } from './routes/PublicRoute';
+import { PrivateRoute } from './routes/PrivateRoute';
+import { HashRouter } from 'react-router-dom'
+import CartPage from './containers/CartPage';
 
 type CategoryProps = CategoryStore.CategoryState & typeof CategoryStore.actionCreators
 
 const App = (props: CategoryProps) => {
     React.useEffect(() => {
+        console.log(1)
         props.requestCategories();
     }, [])
     if (props.isLoading) {
         return <div>Loading</div>
     }
-    return <BrowserRouter>
+    return <HashRouter>
         <Switch>
-            <Route exact path='/' component={Login} />
-            <Route exact path='/signup' component={SignUp} />
+            <PublicRoute key="login" exact path='/' component={Login} />
+            <PublicRoute key="signup" exact path='/signup' component={SignUp} />
             <Layout>
-                <Route exact path='/admin/home' component={BookManage} />
-                <Route exact path='/home' component={BookPage} />
-                <Route exact path='/counter' component={Counter} />
-                <Route path='/fetch-data/:startDateIndex?' component={FetchData} />
-                <Route path='/book/:id?' component={BookDetail} />
+                <PrivateRoute exact path='/home' key="home" component={BookPage} />
+                <PrivateRoute exact path='/counter' key="counter" component={Counter} />
+                <PrivateRoute exact path='/admin/home' key="admin/home/managebook" component={BookManage} />
+                <PrivateRoute key="cartpage" path="/cart" exact component={CartPage} />
+                <PrivateRoute key="book/id" path='/book/:id?' component={BookDetail} />
             </Layout>
         </Switch>
-    </BrowserRouter>
+</HashRouter>
 };
 
 export default connect(

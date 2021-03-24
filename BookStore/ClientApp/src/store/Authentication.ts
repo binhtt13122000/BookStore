@@ -9,6 +9,7 @@ export interface AuthenticateState {
 }
 
 export interface Authenticate {
+    id?: number;
     email: string;
     name?: string;
     password?: string;
@@ -56,8 +57,8 @@ export const actionCreators = {
         })
         .then(res => {
             if (res.status === 200) {
-                    console.log("success")
-                    dispatch({ type: "LOGIN_SUCCESS", authenticate: res.data })
+                localStorage.setItem("loggedIn", "1");
+                dispatch({ type: "LOGIN_SUCCESS", authenticate: res.data })
                 }
             })
             .catch(err => {

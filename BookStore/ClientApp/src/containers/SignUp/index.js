@@ -61,19 +61,6 @@ function SignUp(props) {
     var _a = react_hook_form_1.useForm(), handleSubmit = _a.handleSubmit, clearErrors = _a.clearErrors, errors = _a.errors, setError = _a.setError, register = _a.register, watch = _a.watch;
     var password = React.useRef({});
     password.current = watch("password", "");
-    React.useEffect(function () {
-        if (!props.status) {
-            console.log("chua dang nhap");
-        }
-        else {
-            if (props.authenticate.roleId === 1) {
-                history.push("/home");
-            }
-            else {
-                history.push("/admin/home");
-            }
-        }
-    }, []);
     var _b = React.useState(false), loading = _b[0], setLoading = _b[1];
     var submitHandler = function (data) {
         clearErrors();

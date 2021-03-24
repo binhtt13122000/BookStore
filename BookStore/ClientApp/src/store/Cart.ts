@@ -1,4 +1,5 @@
-﻿import { Action, Reducer } from 'redux';
+﻿import axios from 'axios';
+import { Action, Reducer } from 'redux';
 import { AppThunkAction } from './';
 
 export interface CartState {
@@ -7,11 +8,11 @@ export interface CartState {
 }
 
 export interface CartDetail {
-    id: number;
+    id?: number;
     userId: number;
     bookId: number;
     quantity: number;
-    status: boolean;
+    status?: boolean;
 }
 
 export interface RequestCartAction {
@@ -23,9 +24,17 @@ export interface ReceiveCartAction {
     cartDetails: CartDetail[]
 }
 
-export interface AddToCart {
-    type: "ADD_TO_CART";
+export interface AddToCartRequest {
+    type: "ADD_TO_CART_REQUEST";
+}
+
+export interface AddToCartSuccess {
+    type: "ADD_TO_CART_SUCCESS";
     cartDetail: CartDetail;
+}
+
+export interface AddToCartFail {
+    type: "ADD_TO_CART_FAIL";
 }
 
 export interface RemoveFromCart {
@@ -38,11 +47,51 @@ export interface UpdateCart {
     cartDetail: CartDetail;
 }
 
-type KnownAction = ReceiveCartAction | RequestCartAction | AddToCart | RemoveFromCart | UpdateCart;
+export interface DeleteCart {
+    type: "DELETE_ITEM_IN_CART";
+    id: number;
+}
+
+type KnownAction = ReceiveCartAction | RequestCartAction | AddToCartRequest | AddToCartSuccess | AddToCartFail | RemoveFromCart | UpdateCart | DeleteCart;
 
 export const actionCreators = {
+    deleteCart: (id: number, resolve: any): AppThunkAction<KnownAction> => (dispatch, getState) => {
+        axios.delete(`/api/productcarts/${id}`)
+            .then(request => {
+                if (request.status === 204) {
+                    dispatch({ type: 'DELETE_ITEM_IN_CART', id: id });
+                }
+                resolve();
+            }).
+            catch(ex => {
+                console.log(ex);
+                resolve();
+            })
+    },
     requestCart: (id: number): AppThunkAction<KnownAction> => (dispath, getState) => {
+        axios.get(`api/productcarts/users/${id}`)
+            .then(response => {
+                if (response.status === 200) {
+                    dispath({ type: "RECEIVE_CART", cartDetails: response.data })
+                }
+            })
+            .catch(ex => console.log(ex));
+        dispath({ type: 'REQUEST_CART' });
+    },
 
+    addToCart: (cartDetail: CartDetail): AppThunkAction<KnownAction> => (dispatch, getState) => {
+        axios.post("api/productcarts", { ...cartDetail })
+            .then(response => {
+                console.log(response);
+                if (response.status === 200) {
+                    dispatch({ type: "ADD_TO_CART_SUCCESS", cartDetail: response.data })
+                }
+            })
+            .catch(ex => {
+                console.log(ex.response);
+                dispatch({ type: "ADD_TO_CART_FAIL" });
+            })
+        dispatch({ type: "ADD_TO_CART_REQUEST" });
     }
 
 
@@ -64,12 +113,22 @@ export const reducer: Reducer<CartState> = (state: CartState | undefined, incomi
                 isLoading: false,
                 cartDetails: action.cartDetails
             }
-        case "ADD_TO_CART":
+        case "ADD_TO_CART_REQUEST":
+            return {
+                isLoading: true,
+                cartDetails: state.cartDetails
+            }
+        case "ADD_TO_CART_SUCCESS":
             let cartDetails = [...state.cartDetails];
             cartDetails.push(action.cartDetail);
             return {
                 isLoading: false,
                 cartDetails: cartDetails
+            };
+        case "ADD_TO_CART_FAIL":
+            return {
+                isLoading: false,
+                cartDetails: state.cartDetails
             };
         case "REMOVE_FORM_CART":
             let removedCartDetails = [...state.cartDetails].filter(cartDetail => cartDetail.id !== action.id);
@@ -84,6 +143,12 @@ export const reducer: Reducer<CartState> = (state: CartState | undefined, incomi
             return {
                 isLoading: false,
                 cartDetails: updatedCartDetails
+            }
+        case "DELETE_ITEM_IN_CART":
+            let deletedCartDetails = [...state.cartDetails].filter(item => item.id !== action.id);
+            return {
+                isLoading: false,
+                cartDetails: deletedCartDetails
             }
         default:
             return state;

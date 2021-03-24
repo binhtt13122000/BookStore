@@ -22,7 +22,7 @@ const useStyles = makeStyles({
 export default function BookCard(props: any) {
     const history = useHistory();
     const classes = useStyles();
-    const { book } = props;
+    const { book, addToCart } = props;
     return (
         <Card className={classes.root}>
             <CardActionArea onClick={e => history.push('/book/' + book.id)}>
@@ -48,7 +48,7 @@ export default function BookCard(props: any) {
             </CardActionArea>
             <CardActions>
                 <Grid container justify="flex-end">
-                    <Button variant="contained" size="small" color="primary">
+                    <Button onClick={() => addToCart(book.id)} variant="contained" size="small" color="primary">
                         Add to Cart
                     </Button>
                 </Grid>

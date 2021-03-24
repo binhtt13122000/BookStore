@@ -60,22 +60,7 @@ function Login(props) {
     var classes = useStyles();
     var history = react_router_1.useHistory();
     var _a = react_hook_form_1.useForm(), errors = _a.errors, setError = _a.setError, register = _a.register, handleSubmit = _a.handleSubmit, clearErrors = _a.clearErrors;
-    React.useEffect(function () {
-        if (!props.status) {
-            console.log("chua dang nhap");
-            return;
-        }
-        else {
-            if (props.authenticate.roleId === 1) {
-                history.push("/home");
-            }
-            else {
-                history.push("/admin/home");
-            }
-        }
-    }, []);
     var submitHandler = function (data) {
-        console.log(props);
         clearErrors();
         props.login(data, setError);
     };

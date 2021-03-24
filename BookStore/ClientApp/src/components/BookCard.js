@@ -20,7 +20,7 @@ var useStyles = styles_1.makeStyles({
 function BookCard(props) {
     var history = react_router_1.useHistory();
     var classes = useStyles();
-    var book = props.book;
+    var book = props.book, addToCart = props.addToCart;
     return (React.createElement(Card_1.default, { className: classes.root },
         React.createElement(CardActionArea_1.default, { onClick: function (e) { return history.push('/book/' + book.id); } },
             React.createElement(CardMedia_1.default, { className: classes.media, image: "https://material-ui.com/static/images/cards/contemplative-reptile.jpg", title: "Contemplative Reptile" }),
@@ -38,7 +38,7 @@ function BookCard(props) {
                     " VN\u0110"))),
         React.createElement(CardActions_1.default, null,
             React.createElement(Grid_1.default, { container: true, justify: "flex-end" },
-                React.createElement(Button_1.default, { variant: "contained", size: "small", color: "primary" }, "Add to Cart")))));
+                React.createElement(Button_1.default, { onClick: function () { return addToCart(book.id); }, variant: "contained", size: "small", color: "primary" }, "Add to Cart")))));
 }
 exports.default = BookCard;
 //# sourceMappingURL=BookCard.js.map

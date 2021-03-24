@@ -15,7 +15,7 @@ exports.actionCreators = {
         })
             .then(function (res) {
             if (res.status === 200) {
-                console.log("success");
+                localStorage.setItem("loggedIn", "1");
                 dispatch({ type: "LOGIN_SUCCESS", authenticate: res.data });
             }
         })

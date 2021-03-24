@@ -64,20 +64,7 @@ function Login(props: AuthenticateProps) {
     const classes = useStyles();
     const history = useHistory();
     const { errors, setError, register, handleSubmit, clearErrors } = useForm();
-    React.useEffect(() => {
-        if (!props.status) {
-            console.log("chua dang nhap");
-            return;
-        } else {
-            if (props.authenticate.roleId === 1) {
-                history.push("/home")
-            } else {
-                history.push("/admin/home");
-            }
-        }
-    }, [])
     const submitHandler = (data: AuthenticationStore.Authenticate) => {
-        console.log(props);
         clearErrors();
         props.login(data, setError);
     }

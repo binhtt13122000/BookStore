@@ -4,17 +4,25 @@ import Container from '@material-ui/core/Container';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store';
 import * as BookStore from '../../store/Books';
-
+import * as CategoryStore from '../../store/Category';
 type Column = { title: string; field: string; type?: any; lookup?: any, editable?: any }
-type BookProps = BookStore.BookState & typeof BookStore.actionCreators
+type BookProps = BookStore.BookState & typeof BookStore.actionCreators & CategoryStore.CategoryState
 const BookManage = (props: BookProps) => {
-
+    var result: {[unit: string]: string} = {};
+    for (var i = 0; i < props.categories.length; i++) {
+        result[props.categories[i].id.toString()] = props.categories[i].name;
+    }
     const columnsOfTable: Column[] = [
         { title: 'STT', field: 'id', editable: 'never' },
         { title: 'Tên sách', field: 'name' },
         { title: 'Tác giả', field: 'author' },
         { title: 'Giá bán', field: 'price', type: "numeric" },
         { title: 'Số lượng', field: 'quantity', type: "numeric" },
+        {
+            title: 'Loại sách',
+            field: 'categoryId',
+            lookup: { ...result },
+        },
         {
             title: 'Trạng thái',
             field: 'status',
@@ -24,7 +32,6 @@ const BookManage = (props: BookProps) => {
     ]
 
     React.useEffect(() => {
-        console.log(1);
         props.requestBooks();
     }, []);
 
@@ -71,6 +78,8 @@ const BookManage = (props: BookProps) => {
 }
 
 export default connect(
-    (state: ApplicationState) => state.books,
+    (state: ApplicationState) => {
+        return { ...state.books, ...state.categories }
+    },
     BookStore.actionCreators
 )(BookManage as any);
