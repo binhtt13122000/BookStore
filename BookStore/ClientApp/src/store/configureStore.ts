@@ -5,9 +5,27 @@ import { History } from 'history';
 import { ApplicationState, reducers } from './';
 
 export default function configureStore(history: History, initialState?: ApplicationState) {
+    
+
+    try {
+        console.log("a");
+        initialState = localStorage.getItem("master_class") ? JSON.parse(localStorage.getItem("master_class") || '{}') : {};
+    } catch (error) {
+        console.log('getError', error)
+    }
+
+    const saver = (store: any) => (next: any) => (action: any) => {
+        console.log("b");
+        console.log(store.getState());
+        const returnValue = next(action);
+        let stateToSave = store.getState();
+        localStorage.setItem("master_class", JSON.stringify({ ...stateToSave }))
+        return returnValue;
+    }
+
     const middleware = [
         thunk,
-        routerMiddleware(history)
+        routerMiddleware(history),
     ];
 
     const rootReducer = combineReducers({
@@ -24,6 +42,6 @@ export default function configureStore(history: History, initialState?: Applicat
     return createStore(
         rootReducer,
         initialState,
-        compose(applyMiddleware(...middleware), ...enhancers)
+        compose(applyMiddleware(...middleware, saver), ...enhancers)
     );
 }
