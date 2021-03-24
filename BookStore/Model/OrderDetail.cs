@@ -11,10 +11,6 @@ namespace BookStore.Model
     [Table("OrderDetail")]
     public partial class OrderDetail
     {
-        public OrderDetail()
-        {
-        }
-
         [Key]
         [Column("id")]
         public int Id { get; set; }

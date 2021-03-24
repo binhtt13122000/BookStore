@@ -17,7 +17,8 @@ export interface Book {
     quantity: number;
     status: boolean;
     categoryId: number;
-    category?: any
+    category?: any,
+    image?: string
 }
 
 

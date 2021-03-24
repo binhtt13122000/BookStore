@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 import { ApplicationState } from '../../store';
 import * as BookStore from '../../store/Books';
 import * as CategoryStore from '../../store/Category';
-type Column = { title: string; field: string; type?: any; lookup?: any, editable?: any }
+import { Button } from '@material-ui/core';
+type Column = { title: string; field: string; type?: any; lookup?: any, editable?: any, render?: any }
 type BookProps = BookStore.BookState & typeof BookStore.actionCreators & CategoryStore.CategoryState
 const BookManage = (props: BookProps) => {
     var result: {[unit: string]: string} = {};
@@ -29,6 +30,11 @@ const BookManage = (props: BookProps) => {
             lookup: { false: 'Đã xóa', true: 'Bình thường' },
             editable: "onUpdate"
         },
+        {
+            title: "Hình ảnh",
+            field: "image",
+            render: (rowData: BookStore.Book) => rowData.image || <Button size="small" variant="contained" color="primary">Add Image</Button>
+        }
     ]
 
     React.useEffect(() => {
