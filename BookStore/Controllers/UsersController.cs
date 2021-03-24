@@ -91,11 +91,11 @@ namespace BookStore.Controllers
 
         //Post: api/Users/login
         [HttpPost("login")]
-        public async Task<IActionResult> LoginUser(AuthenticateRequest user)
+        public async Task<ActionResult<IEnumerable<User>>> LoginUser(AuthenticateRequest user)
         {
             if(user != null && user.Email != null && user.Password != null)
             {
-                var CheckUser = await _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(user.Email));
+                var CheckUser = _context.Users.Where(u => u.Email.Equals(user.Email)).Include(s => s.Role).FirstOrDefault();
                 if(CheckUser != null && BCrypt.Net.BCrypt.Verify(user.Password, CheckUser.Password))
                 {
                     if (CheckUser != null)
