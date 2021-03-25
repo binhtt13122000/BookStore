@@ -45,6 +45,7 @@
     <None Remove="ClientApp\src\containers\CartPage\index.tsx" />
     <None Remove="ClientApp\src\containers\Login\index.tsx" />
     <None Remove="ClientApp\src\containers\SignUp\index.tsx" />
+    <None Remove="ClientApp\src\Firebase\firebase.ts" />
     <None Remove="ClientApp\src\routes\PrivateRoute.tsx" />
     <None Remove="ClientApp\src\routes\PublicRoute.tsx" />
     <None Remove="ClientApp\src\store\Authentication.ts" />
@@ -61,6 +62,7 @@
     <TypeScriptCompile Include="ClientApp\src\containers\CartPage\index.tsx" />
     <TypeScriptCompile Include="ClientApp\src\containers\Login\index.tsx" />
     <TypeScriptCompile Include="ClientApp\src\containers\SignUp\index.tsx" />
+    <TypeScriptCompile Include="ClientApp\src\Firebase\firebase.ts" />
     <TypeScriptCompile Include="ClientApp\src\routes\PrivateRoute.tsx" />
     <TypeScriptCompile Include="ClientApp\src\routes\PublicRoute.tsx" />
     <TypeScriptCompile Include="ClientApp\src\store\Authentication.ts" />

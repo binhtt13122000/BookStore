@@ -104,7 +104,7 @@ export const actionCreators = {
     createBooks: (book: Book, resolve: any): AppThunkAction<KnownAction> => (dispatch, getState) => {
         axios.post(`api/Books`, {...book})
             .then(response => {
-                if (response.status === 200) {
+                if (response.status === 201) {
                     dispatch({ type: 'ADD_BOOK', newBook: response.data });
                     resolve();
                 }

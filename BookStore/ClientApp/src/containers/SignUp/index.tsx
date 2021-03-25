@@ -17,6 +17,7 @@ import { connect } from 'react-redux';
 import WarningIcon from '@material-ui/icons/Warning';
 import Axios from 'axios';
 import { Redirect, useHistory } from 'react-router';
+import { CircularProgress, Snackbar } from '@material-ui/core';
 function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
@@ -68,6 +69,17 @@ function SignUp(props: AuthenticateProps) {
     const { handleSubmit, clearErrors, errors, setError, register, watch } = useForm();
     const password = React.useRef({});
     password.current = watch("password", "");
+    const [open, setOpen] = React.useState(false);
+
+
+    const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
+        history.push("/");
+    };
 
     const [loading, setLoading] = React.useState(false);
 
@@ -78,10 +90,12 @@ function SignUp(props: AuthenticateProps) {
             .then(res => {
                 if (res.status === 200) {
                     console.log("Successful!");
-                    setLoading(true);
+                    setOpen(true);
+                    setLoading(false);
                 }
             })
             .catch(ex => {
+                setLoading(false);
                 console.log(ex.response);
                 setError("REGISTER_FAIL", {
                     type: "manual",
@@ -196,7 +210,7 @@ function SignUp(props: AuthenticateProps) {
                         color="primary"
                         className={classes.submit}
                     >
-                        Sign Up
+                        {loading ? <CircularProgress style={{ 'color': 'white'}} size="20" /> : "Sign Up"}
                     </Button>
                     {errors["REGISTER_FAIL"] &&
                         <div className={classes.warming}>
@@ -216,6 +230,7 @@ function SignUp(props: AuthenticateProps) {
             <Box mt={5}>
                 <Copyright />
             </Box>
+            <Snackbar open={open} autoHideDuration={4000} onClose={handleClose} message="Register Successfully" />
         </Container>
     );
 }

@@ -18,6 +18,7 @@ var react_redux_1 = require("react-redux");
 var Warning_1 = require("@material-ui/icons/Warning");
 var axios_1 = require("axios");
 var react_router_1 = require("react-router");
+var core_1 = require("@material-ui/core");
 function Copyright() {
     return (React.createElement(Typography_1.default, { variant: "body2", color: "textSecondary", align: "center" },
         'Copyright © ',
@@ -61,7 +62,15 @@ function SignUp(props) {
     var _a = react_hook_form_1.useForm(), handleSubmit = _a.handleSubmit, clearErrors = _a.clearErrors, errors = _a.errors, setError = _a.setError, register = _a.register, watch = _a.watch;
     var password = React.useRef({});
     password.current = watch("password", "");
-    var _b = React.useState(false), loading = _b[0], setLoading = _b[1];
+    var _b = React.useState(false), open = _b[0], setOpen = _b[1];
+    var handleClose = function (event, reason) {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpen(false);
+        history.push("/");
+    };
+    var _c = React.useState(false), loading = _c[0], setLoading = _c[1];
     var submitHandler = function (data) {
         clearErrors();
         setLoading(true);
@@ -69,10 +78,12 @@ function SignUp(props) {
             .then(function (res) {
             if (res.status === 200) {
                 console.log("Successful!");
-                setLoading(true);
+                setOpen(true);
+                setLoading(false);
             }
         })
             .catch(function (ex) {
+            setLoading(false);
             console.log(ex.response);
             setError("REGISTER_FAIL", {
                 type: "manual",
@@ -124,7 +135,7 @@ function SignUp(props) {
                             React.createElement("div", { className: classes.warming },
                                 React.createElement(Warning_1.default, { className: classes.warmingIcon }),
                                 React.createElement("span", null, errors["confirm"].message)))),
-                React.createElement(Button_1.default, { type: "submit", fullWidth: true, variant: "contained", color: "primary", className: classes.submit }, "Sign Up"),
+                React.createElement(Button_1.default, { type: "submit", fullWidth: true, variant: "contained", color: "primary", className: classes.submit }, loading ? React.createElement(core_1.CircularProgress, { style: { 'color': 'white' }, size: "20" }) : "Sign Up"),
                 errors["REGISTER_FAIL"] &&
                     React.createElement("div", { className: classes.warming },
                         React.createElement(Warning_1.default, { className: classes.warmingIcon }),
@@ -133,7 +144,8 @@ function SignUp(props) {
                     React.createElement(Grid_1.default, { item: true },
                         React.createElement(Link_1.default, { href: "/", variant: "body2" }, "Already have an account? Sign in"))))),
         React.createElement(Box_1.default, { mt: 5 },
-            React.createElement(Copyright, null))));
+            React.createElement(Copyright, null)),
+        React.createElement(core_1.Snackbar, { open: open, autoHideDuration: 4000, onClose: handleClose, message: "Register Successfully" })));
 }
 exports.default = react_redux_1.connect(function (state) { return state.authenticate; }, AuthenticationStore.actionCreators)(SignUp);
 //# sourceMappingURL=index.js.map

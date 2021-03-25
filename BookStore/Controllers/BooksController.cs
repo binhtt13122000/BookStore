@@ -26,7 +26,7 @@ namespace BookStore.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Book>>> GetBooks()
         {
-            return await _context.Books.Include(s => s.Category).ToListAsync();
+            return await _context.Books.ToListAsync();
         }
 
         // GET: api/Books/5
