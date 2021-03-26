@@ -24,7 +24,7 @@ exports.actionCreators = {
                 if (err.response.status === 401 || err.response.status === 400) {
                     setError("password", {
                         type: "manual",
-                        message: "Student code or password is not correct.",
+                        message: "Email hoặc Mật khẩu không đúng!",
                     });
                 }
                 dispatch({ type: "LOGIN_FAIL" });

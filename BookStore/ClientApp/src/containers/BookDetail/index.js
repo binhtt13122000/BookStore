@@ -36,7 +36,7 @@ var BookDetail = function (props) {
     };
     return React.createElement("main", { className: "container" },
         React.createElement("div", { className: "left-column" },
-            React.createElement("img", { className: "active", src: "https://1.bp.blogspot.com/-Yqc7dYMjV4k/WPByXopDvrI/AAAAAAAAIWU/d-z3mInf5YIvjSYK2XCVQi_QBhB-HHM-gCLcB/s320/The%2BObject%2BOriented%2Bthought%2Bprocess.jpeg", alt: "Book", width: "80%" })),
+            React.createElement("img", { className: "active", src: props.books[0] && props.books[0].image, alt: "Book", width: "80%" })),
         React.createElement("div", { className: "right-column" },
             React.createElement("div", { className: "product-description" },
                 React.createElement("span", null, props.books[0].category && props.books[0].category.name),
@@ -50,7 +50,7 @@ var BookDetail = function (props) {
                 React.createElement("span", null,
                     props.books[0] && props.books[0].price,
                     " VN\u0110"),
-                React.createElement("button", { onClick: addToCart, className: "cart-btn" }, "Add to cart"))));
+                React.createElement("button", { onClick: addToCart, className: "cart-btn" }, "Th\u00EAm v\u00E0o gi\u1ECF h\u00E0ng"))));
 };
 exports.default = react_redux_1.connect(function (state) {
     return __assign(__assign({}, state.books), state.authenticate);

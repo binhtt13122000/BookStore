@@ -99,7 +99,7 @@ function SignUp(props: AuthenticateProps) {
                 console.log(ex.response);
                 setError("REGISTER_FAIL", {
                     type: "manual",
-                    message: "Create fail!"
+                    message: "Đăng kí thất bại!"
                 });
             })
     }
@@ -120,7 +120,7 @@ function SignUp(props: AuthenticateProps) {
                     <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                    Sign up
+                    Đăng Kí
         </Typography>
                 <form className={classes.form} noValidate onSubmit={handleSubmit(submitHandler)}>
                     <Grid container spacing={2}>
@@ -130,10 +130,10 @@ function SignUp(props: AuthenticateProps) {
                                 required
                                 fullWidth
                                 id="lastName"
-                                label="FullName"
+                                label="Họ và Tên"
                                 name="name"
                                 error={errors["name"] !== null && errors["name"] !== undefined}
-                                inputRef={register({ required: "Fullname is required!" })}
+                                inputRef={register({ required: "Họ và Tên không được để trống!" })}
                             />
                             {errors["name"] &&
                                 <div className={classes.warming}>
@@ -148,11 +148,15 @@ function SignUp(props: AuthenticateProps) {
                                 required
                                 fullWidth
                                 id="email"
-                                label="Email Address"
+                                label="Địa chỉ Email"
                                 name="email"
                                 autoComplete="email"
                                 error={errors["email"] !== null && errors["email"] !== undefined}
-                                inputRef={register({ required: "Email is required!" })}
+                                inputRef={register({
+                                    required: "Email không được để trống!", pattern: {
+                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                        message: "Email không hợp lệ!"
+                                    } })}
                             />
                             {errors["email"] &&
                                 <div className={classes.warming}>
@@ -167,11 +171,11 @@ function SignUp(props: AuthenticateProps) {
                                 required
                                 fullWidth
                                 name="password"
-                                label="Password"
+                                label="Mật khẩu"
                                 type="password"
                                 id="password"
                                 error={errors["password"] !== null && errors["password"] !== undefined}
-                                inputRef={register({ required: "Password is required!" })}
+                                inputRef={register({ required: "Mật khẩu không được để trống!" })}
                             />
                             {errors["password"] &&
                                 <div className={classes.warming}>
@@ -186,13 +190,13 @@ function SignUp(props: AuthenticateProps) {
                                 required
                                 fullWidth
                                 name="confirm"
-                                label="Confirm Password"
+                                label="Nhập lại mật khẩu"
                                 type="password"
                                 id="confirm"
                                 error={errors["confirm"] !== null && errors["confirm"] !== undefined}
                                 inputRef={register({
                                     validate: value =>
-                                        value === password.current || "The passwords do not match"
+                                        value === password.current || "Không khớp với mật khẩu"
                                 })}
                             />
                             {errors["confirm"] &&
@@ -210,7 +214,7 @@ function SignUp(props: AuthenticateProps) {
                         color="primary"
                         className={classes.submit}
                     >
-                        {loading ? <CircularProgress style={{ 'color': 'white'}} size="20" /> : "Sign Up"}
+                        {loading ? <CircularProgress style={{ 'color': 'white'}} size="20" /> : "Đăng kí"}
                     </Button>
                     {errors["REGISTER_FAIL"] &&
                         <div className={classes.warming}>

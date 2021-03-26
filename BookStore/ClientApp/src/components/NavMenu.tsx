@@ -1,4 +1,4 @@
-import * as React from 'react';
+﻿import * as React from 'react';
 import { Collapse, Container, DropdownItem, DropdownMenu, DropdownToggle, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink, UncontrolledDropdown } from 'reactstrap';
 import { Link, useHistory } from 'react-router-dom';
 import './NavMenu.css';
@@ -32,28 +32,22 @@ const NavMenu = (props: AuthenticateProps) => {
                         <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={state.isOpen} navbar>
                             <ul className="navbar-nav flex-grow">
                                 <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to="/home">Products</NavLink>
-                                </NavItem>
-                                <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to="/counter">Users</NavLink>
+                                    <NavLink tag={Link} className="text-dark" to="/home">Sản phẩm</NavLink>
                                 </NavItem>
                                 {props.authenticate.roleId === 1 ? < NavItem >
-                                    <NavLink tag={Link} className="text-dark" to="/cart">Shopping Cart</NavLink>
+                                    <NavLink tag={Link} className="text-dark" to="/cart">Giỏ hàng</NavLink>
                                 </NavItem> : null}
                                 <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to="/fetch-data">Order History</NavLink>
+                                    <NavLink tag={Link} className="text-dark" to="/fetch-data">Lịch sử giao dịch</NavLink>
                                 </NavItem>
                                 <UncontrolledDropdown nav inNavbar>
                                     <DropdownToggle nav caret>
-                                        Options
+                                        Thêm
                                     </DropdownToggle>
                                     <DropdownMenu right>
-                                        <DropdownItem>
-                                            User Profile
-                                        </DropdownItem>
                                         <DropdownItem divider />
                                         <DropdownItem onClick={() => logout()}>
-                                            Logout
+                                            Đăng xuất
                                         </DropdownItem>
                                     </DropdownMenu>
                                 </UncontrolledDropdown>

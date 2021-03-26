@@ -52,6 +52,7 @@
     <None Remove="ClientApp\src\store\Books.ts" />
     <None Remove="ClientApp\src\store\Cart.ts" />
     <None Remove="ClientApp\src\store\Category.ts" />
+    <None Remove="ClientApp\src\store\Orders.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -69,6 +70,7 @@
     <TypeScriptCompile Include="ClientApp\src\store\Books.ts" />
     <TypeScriptCompile Include="ClientApp\src\store\Cart.ts" />
     <TypeScriptCompile Include="ClientApp\src\store\Category.ts" />
+    <TypeScriptCompile Include="ClientApp\src\store\Orders.ts" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

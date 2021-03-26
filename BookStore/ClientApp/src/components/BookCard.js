@@ -23,7 +23,7 @@ function BookCard(props) {
     var book = props.book, addToCart = props.addToCart;
     return (React.createElement(Card_1.default, { className: classes.root },
         React.createElement(CardActionArea_1.default, { onClick: function (e) { return history.push('/book/' + book.id); } },
-            React.createElement(CardMedia_1.default, { className: classes.media, image: "https://material-ui.com/static/images/cards/contemplative-reptile.jpg", title: "Contemplative Reptile" }),
+            React.createElement(CardMedia_1.default, { className: classes.media, image: book.image, title: "Contemplative Reptile" }),
             React.createElement(CardContent_1.default, null,
                 React.createElement(Typography_1.default, { gutterBottom: true, variant: "h5", component: "h2" }, book.name),
                 React.createElement(Typography_1.default, { variant: "body2", color: "textSecondary", component: "p" },
@@ -38,7 +38,7 @@ function BookCard(props) {
                     " VN\u0110"))),
         React.createElement(CardActions_1.default, null,
             React.createElement(Grid_1.default, { container: true, justify: "flex-end" },
-                React.createElement(Button_1.default, { onClick: function () { return addToCart(book.id); }, variant: "contained", size: "small", color: "primary" }, "Add to Cart")))));
+                React.createElement(Button_1.default, { onClick: function () { return addToCart(book.id); }, variant: "contained", size: "small", color: "primary" }, "Th\u00EAm v\u00E0o gi\u1ECF h\u00E0ng")))));
 }
 exports.default = BookCard;
 //# sourceMappingURL=BookCard.js.map

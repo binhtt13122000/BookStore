@@ -34,6 +34,9 @@ exports.actionCreators = {
             resolve();
         });
     }; },
+    deleteAll: function () { return function (dispatch, getState) {
+        dispatch({ type: "DELETE_CART" });
+    }; },
     updateCart: function (newData, id, index, quantity, resolve) { return function (dispatch, getSetter) {
         axios_1.default.put("/api/productcarts/" + id, __assign({}, newData))
             .then(function (request) {
@@ -71,7 +74,7 @@ exports.actionCreators = {
             dispatch({ type: "ADD_TO_CART_FAIL" });
         });
         dispatch({ type: "ADD_TO_CART_REQUEST" });
-    }; }
+    }; },
 };
 var unloadedState = { isLoading: false, cartDetails: [] };
 var reducer = function (state, incomingAction) {
@@ -124,6 +127,12 @@ var reducer = function (state, incomingAction) {
                 isLoading: false,
                 cartDetails: deletedCartDetails
             };
+        case "DELETE_CART": {
+            return {
+                isLoading: false,
+                cartDetails: []
+            };
+        }
         default:
             return state;
     }

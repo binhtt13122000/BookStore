@@ -42,7 +42,7 @@ function CheckboxList(props) {
         setChecked(newChecked);
     }; };
     return (React.createElement(React.Fragment, null,
-        React.createElement(core_1.Typography, { variant: "h5", style: { 'marginBottom': '15px' } }, "Categories"),
+        React.createElement(core_1.Typography, { variant: "h5", style: { 'marginBottom': '15px' } }, "Danh m\u1EE5c s\u00E1ch"),
         React.createElement(List_1.default, { className: classes.root }, props.categories.map(function (category, index) {
             var labelId = 'category-' + category.id;
             return (React.createElement(ListItem_1.default, { key: index, role: undefined, dense: true, button: true, onClick: handleToggle(category.id) },

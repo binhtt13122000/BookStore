@@ -86,7 +86,7 @@ function Login(props: AuthenticateProps) {
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Sign in
+                        Đăng nhập
                     </Typography>
                     <form className={classes.form} noValidate autoComplete="off" onSubmit={handleSubmit(submitHandler)}>
                         <TextField
@@ -95,11 +95,16 @@ function Login(props: AuthenticateProps) {
                             required
                             fullWidth
                             id="email"
-                            label="Email Address"
+                            label="Địa chỉ Email"
                             name="email"
                             autoFocus
                             error={errors["email"] !== null && errors["email"] !== undefined}
-                            inputRef={register({ required: "Email is required." })}
+                            inputRef={register({
+                                required: "Email không được để trống!", pattern: {
+                                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                    message: "Email không hợp lệ!"
+                                }
+                            })}
                         />
                         {errors["email"] &&
                             <div className={classes.warming}>
@@ -113,11 +118,11 @@ function Login(props: AuthenticateProps) {
                             required
                             fullWidth
                             name="password"
-                            label="Password"
+                            label="Mật khẩu"
                             type="password"
                             id="password"
                             error={errors["password"] !== null && errors["password"] !== undefined}
-                            inputRef={register({ required: "Password is required." })}
+                            inputRef={register({ required: "Mật khẩu không được để trống!" })}
                         />
                         {errors["password"] &&
                             <div className={classes.warming}>
@@ -132,13 +137,13 @@ function Login(props: AuthenticateProps) {
                             color="primary"
                             className={classes.submit}
                         >
-                            {props.isLoading ? "Loading" : "Sign In"}
+                            {props.isLoading ? "Loading" : "Đăng nhập"}
                         </Button>
                     </form>
                         <Grid container>
                         <Grid item onClick={() => history.push("/signup")}>
                             <Typography style={{'cursor': 'pointer'}} color="primary" variant="body2">
-                                {"Don't have an account? Sign Up"}
+                                {"Chưa có tài khoản trước đây? Đăng kí"}
                             </Typography>
                             </Grid>
                         </Grid>
