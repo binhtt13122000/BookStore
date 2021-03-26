@@ -43,7 +43,6 @@ const CartPage = (props: CartProps) => {
     }, []);
 
     const handleRowUpdate = (newData: CartStore.CartDetail, oldData: any, resolve: any) => {
-        console.log("a");
         props.updateCart(newData, newData.id || -1, oldData.tableData.id, newData.quantity || -1, resolve);
     }
 
@@ -77,7 +76,7 @@ const CartPage = (props: CartProps) => {
             .catch(ex => {
                 setLoading(false);
                 console.log(ex.response);
-                setError("CHECKOUT_FAIL", {
+                setError("phone", {
                     type: "manual",
                     message: "Thanh toán thất bại!"
                 });
@@ -166,7 +165,7 @@ const CartPage = (props: CartProps) => {
                         id="phone"
                         name="phone"
                         label="Số điện thoại"
-                        type="text"
+                        type="tel"
                         fullWidth
                         error={errors["phone"] !== null && errors["phone"] !== undefined}
                         inputRef={register({ required: "Số điện thoại được yêu cầu!" })}
@@ -177,10 +176,10 @@ const CartPage = (props: CartProps) => {
                             <span>{errors["phone"].message}</span>
                         </div>
                     }
-                    {errors["CHECKOUT_FAIL"] &&
+                    {errors["phone"] &&
                         <div className={classes.warming}>
                             <WarningIcon className={classes.warmingIcon} />
-                        <span>{errors["CHECKOUT_FAIL"].message}</span>
+                        <span>{errors["phone"].message}</span>
                         </div>
                     }
             </DialogContent>

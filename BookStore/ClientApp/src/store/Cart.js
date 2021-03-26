@@ -61,16 +61,19 @@ exports.actionCreators = {
             .catch(function (ex) { return console.log(ex); });
         dispath({ type: 'REQUEST_CART' });
     }; },
-    addToCart: function (cartDetail) { return function (dispatch, getState) {
+    addToCart: function (cartDetail, setMessage) { return function (dispatch, getState) {
         axios_1.default.post("api/productcarts/users/" + cartDetail.userId + "/books/" + cartDetail.bookId + "?quantity=1")
             .then(function (response) {
             console.log(response);
             if (response.status === 200) {
                 dispatch({ type: "ADD_TO_CART_SUCCESS", cartDetail: response.data });
+                console.log("m");
+                setMessage("Thêm vào giỏ hàng thành công!");
             }
         })
             .catch(function (ex) {
             console.log(ex.response);
+            setMessage("Thêm vào giỏ hàng thất bại!");
             dispatch({ type: "ADD_TO_CART_FAIL" });
         });
         dispatch({ type: "ADD_TO_CART_REQUEST" });

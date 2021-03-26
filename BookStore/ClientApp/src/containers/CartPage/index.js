@@ -47,7 +47,6 @@ var CartPage = function (props) {
         props.requestCart(props.authenticate.id || -1);
     }, []);
     var handleRowUpdate = function (newData, oldData, resolve) {
-        console.log("a");
         props.updateCart(newData, newData.id || -1, oldData.tableData.id, newData.quantity || -1, resolve);
     };
     var handleRowRemove = function (oldData, resolve) {
@@ -77,7 +76,7 @@ var CartPage = function (props) {
             .catch(function (ex) {
             setLoading(false);
             console.log(ex.response);
-            setError("CHECKOUT_FAIL", {
+            setError("phone", {
                 type: "manual",
                 message: "Thanh toán thất bại!"
             });
@@ -134,15 +133,15 @@ var CartPage = function (props) {
                         React.createElement("div", { className: classes.warming },
                             React.createElement(Warning_1.default, { className: classes.warmingIcon }),
                             React.createElement("span", null, errors["address"].message)),
-                    React.createElement(core_1.TextField, { margin: "dense", id: "phone", name: "phone", label: "S\u1ED1 \u0111i\u1EC7n tho\u1EA1i", type: "text", fullWidth: true, error: errors["phone"] !== null && errors["phone"] !== undefined, inputRef: register({ required: "Số điện thoại được yêu cầu!" }) }),
+                    React.createElement(core_1.TextField, { margin: "dense", id: "phone", name: "phone", label: "S\u1ED1 \u0111i\u1EC7n tho\u1EA1i", type: "tel", fullWidth: true, error: errors["phone"] !== null && errors["phone"] !== undefined, inputRef: register({ required: "Số điện thoại được yêu cầu!" }) }),
                     errors["phone"] &&
                         React.createElement("div", { className: classes.warming },
                             React.createElement(Warning_1.default, { className: classes.warmingIcon }),
                             React.createElement("span", null, errors["phone"].message)),
-                    errors["CHECKOUT_FAIL"] &&
+                    errors["phone"] &&
                         React.createElement("div", { className: classes.warming },
                             React.createElement(Warning_1.default, { className: classes.warmingIcon }),
-                            React.createElement("span", null, errors["CHECKOUT_FAIL"].message))),
+                            React.createElement("span", null, errors["phone"].message))),
                 React.createElement(core_1.DialogActions, null,
                     React.createElement(core_1.Button, { onClick: handleClose, color: "primary" }, "Tho\u00E1t"),
                     React.createElement(core_1.Button, { type: "submit", color: "primary" }, "Thanh To\u00E1n")))));

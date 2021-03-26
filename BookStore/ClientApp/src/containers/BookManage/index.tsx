@@ -7,7 +7,7 @@ import * as BookStore from '../../store/Books';
 import * as CategoryStore from '../../store/Category';
 import { Button } from '@material-ui/core';
 import { storage } from '../../Firebase/firebase';
-type Column = { title: string; field: string; type?: any; lookup?: any, editable?: any, render?: any, editComponent?: any }
+type Column = { title: string; field: string; type?: any; lookup?: any, editable?: any, render?: any, editComponent?: any, validate?: any }
 type BookProps = BookStore.BookState & typeof BookStore.actionCreators & CategoryStore.CategoryState
 const BookManage = (props: BookProps) => {
     var result: {[unit: string]: string} = {};
@@ -18,8 +18,8 @@ const BookManage = (props: BookProps) => {
     const fileInput: React.RefObject<HTMLInputElement> = React.createRef();
     const columnsOfTable: Column[] = [
         { title: 'STT', field: 'id', editable: 'never' },
-        { title: 'Tên sách', field: 'name' },
-        { title: 'Tác giả', field: 'author' },
+        { title: 'Tên sách', field: 'name', validate: (rowData: BookStore.Book) => (rowData.name === '' || rowData.name && rowData.name.length > 50) ? "Tên là bắt buộc và bé hơn hoặc bằng 50 kí tự" : "" },
+        { title: 'Tác giả', field: 'author', validate: (rowData: BookStore.Book) => (rowData.author === '' || rowData.author && rowData.author.length > 50) ? "Tác giả là bắt buộc và bé hơn hoặc bằng 50 kí tự" : "" },
         { title: 'Giá bán', field: 'price', type: "numeric" },
         { title: 'Số lượng', field: 'quantity', type: "numeric" },
         {

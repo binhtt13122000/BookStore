@@ -237,7 +237,7 @@ function SignUp(props: AuthenticateProps) {
             <Box mt={5}>
                 <Copyright />
             </Box>
-            <Snackbar open={open} autoHideDuration={4000} onClose={handleClose} message="Register Successfully" />
+            <Snackbar open={open} autoHideDuration={4000} onClose={handleClose} message="Đăng kí thành công!" />
         </Container>
     );
 }

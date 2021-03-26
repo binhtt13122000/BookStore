@@ -100,16 +100,19 @@ export const actionCreators = {
         dispath({ type: 'REQUEST_CART' });
     },
 
-    addToCart: (cartDetail: CartDetail): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    addToCart: (cartDetail: CartDetail, setMessage: any): AppThunkAction<KnownAction> => (dispatch, getState) => {
         axios.post(`api/productcarts/users/${cartDetail.userId}/books/${cartDetail.bookId}?quantity=1`)
             .then(response => {
                 console.log(response);
                 if (response.status === 200) {
-                    dispatch({ type: "ADD_TO_CART_SUCCESS", cartDetail: response.data })
+                    dispatch({ type: "ADD_TO_CART_SUCCESS", cartDetail: response.data });
+                    console.log("m");
+                    setMessage("Thêm vào giỏ hàng thành công!");
                 }
             })
             .catch(ex => {
                 console.log(ex.response);
+                setMessage("Thêm vào giỏ hàng thất bại!")
                 dispatch({ type: "ADD_TO_CART_FAIL" });
             })
         dispatch({ type: "ADD_TO_CART_REQUEST" });

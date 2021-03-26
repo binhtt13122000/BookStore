@@ -9,7 +9,7 @@ import * as CartStore from '../../store/Cart';
 import * as AuthenticateStore from '../../store/Authentication';
 import BookCard from '../../components/BookCard';
 import SideBar from '../../components/SideBar';
-import { Hidden } from '@material-ui/core';
+import { Hidden, Snackbar } from '@material-ui/core';
 
 const creator = { ...BookStore.actionCreators, ...CartStore.actionCreators };
 type BookProps = BookStore.BookState & AuthenticateStore.AuthenticateState & typeof creator
@@ -21,12 +21,16 @@ const BookPage = (props: BookProps) => {
         }
     }))
 
+    const [message, setMessage] = React.useState("");
+
+
     const addToCart = (bookId: number) => {
         props.addToCart({
             userId: props.authenticate.id || -1,
             bookId: bookId,
             quantity: 1
-        })
+        }, setMessage)
+        setOpen(true);
     }
 
     React.useEffect(() => {
@@ -34,7 +38,15 @@ const BookPage = (props: BookProps) => {
     }, []);
 
     const classes = useStyles();
+    const [open, setOpen] = React.useState(false);
 
+    const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
+    };
     return (
         <Grid container>
             <Grid item md={3}>
@@ -52,6 +64,7 @@ const BookPage = (props: BookProps) => {
                         })}
                     </Grid>
                 </Container>
+                {message && <Snackbar open={open} autoHideDuration={4000} onClose={handleClose} message={message} />}
             </Grid>
         </Grid>
     )

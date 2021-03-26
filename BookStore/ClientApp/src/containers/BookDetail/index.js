@@ -19,6 +19,9 @@ var BookStore = require("../../store/Books");
 var CartStore = require("../../store/Cart");
 var creator = __assign(__assign({}, BookStore.actionCreators), CartStore.actionCreators);
 var BookDetail = function (props) {
+    var _a = React.useState(""), message = _a[0], setMessage = _a[1];
+    var _b = React.useState(false), open = _b[0], setOpen = _b[1];
+    var _c = React.useState(false), openSnackbar = _c[0], setOpenSnackbar = _c[1];
     React.useEffect(function () {
         var id = props.location.pathname.substring(props.location.pathname.lastIndexOf("/") + 1);
         props.requestBook(parseInt(id));
@@ -32,7 +35,15 @@ var BookDetail = function (props) {
             userId: props.authenticate.id || -1,
             bookId: parseInt(props.location.pathname.substring(props.location.pathname.lastIndexOf("/") + 1)),
             quantity: 1
-        });
+        }, setMessage);
+        setOpen(false);
+        setOpenSnackbar(true);
+    };
+    var handleClose = function (event, reason) {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenSnackbar(false);
     };
     return React.createElement("main", { className: "container" },
         React.createElement("div", { className: "left-column" },
@@ -50,7 +61,13 @@ var BookDetail = function (props) {
                 React.createElement("span", null,
                     props.books[0] && props.books[0].price,
                     " VN\u0110"),
-                React.createElement("button", { onClick: addToCart, className: "cart-btn" }, "Th\u00EAm v\u00E0o gi\u1ECF h\u00E0ng"))));
+                React.createElement("button", { disabled: props.books[0] && props.books[0].quantity === 0, onClick: function () { return setOpen(true); }, className: "cart-btn" }, "Th\u00EAm v\u00E0o gi\u1ECF h\u00E0ng")),
+            React.createElement(core_1.Dialog, { open: open, onClose: function () { return setOpen(false); }, "aria-labelledby": "alert-dialog-title", "aria-describedby": "alert-dialog-description" },
+                React.createElement(core_1.DialogTitle, { id: "alert-dialog-title" }, "Bạn xác nhận thêm sản phẩm này vào giỏ hàng?"),
+                React.createElement(core_1.DialogActions, null,
+                    React.createElement(core_1.Button, { onClick: addToCart, color: "primary" }, "\u0110\u1ED3ng \u00FD"),
+                    React.createElement(core_1.Button, { onClick: function () { return setOpen(false); }, color: "primary" }, "Tho\u00E1t")))),
+        message && React.createElement(core_1.Snackbar, { open: openSnackbar, autoHideDuration: 4000, onClose: handleClose, message: message }));
 };
 exports.default = react_redux_1.connect(function (state) {
     return __assign(__assign({}, state.books), state.authenticate);

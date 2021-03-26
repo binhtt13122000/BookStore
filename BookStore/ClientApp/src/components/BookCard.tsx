@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { useHistory } from 'react-router';
 import { Book } from '../store/Books';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core';
 
 
 const useStyles = makeStyles({
@@ -24,6 +25,11 @@ export default function BookCard(props: any) {
     const history = useHistory();
     const classes = useStyles();
     const { book, addToCart }: { book: Book, addToCart: any } = props;
+    const [open, setOpen] = React.useState(false);
+    const handleAddCart = (id) => {
+        addToCart(id);
+        setOpen(false);
+    }
     return (
         <Card className={classes.root}>
             <CardActionArea onClick={e => history.push('/book/' + book.id)}>
@@ -49,11 +55,27 @@ export default function BookCard(props: any) {
             </CardActionArea>
             <CardActions>
                 <Grid container justify="flex-end">
-                    <Button onClick={() => addToCart(book.id)} variant="contained" size="small" color="primary">
+                    <Button disabled={book.quantity === 0} onClick={() => setOpen(true)} variant="contained" size="small" color="primary">
                         Thêm vào giỏ hàng
                     </Button>
                 </Grid>
             </CardActions>
+            <Dialog
+                open={open}
+                onClose={() => setOpen(false)}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">{"Bạn xác nhận thêm sản phẩm này vào giỏ hàng?"}</DialogTitle>
+                <DialogActions>
+                    <Button onClick={() => handleAddCart(book.id)} color="primary">
+                        Đồng ý
+          </Button>
+                    <Button onClick={() => setOpen(false)} color="primary">
+                        Thoát
+          </Button>
+                </DialogActions>
+            </Dialog>
         </Card>
     );
 }

@@ -153,7 +153,7 @@ function SignUp(props) {
                         React.createElement(Link_1.default, { href: "/#/", variant: "body2" }, "\u0110\u00E3 c\u00F3 t\u00E0i kho\u1EA3n? \u0110\u0103ng nh\u1EADp"))))),
         React.createElement(Box_1.default, { mt: 5 },
             React.createElement(Copyright, null)),
-        React.createElement(core_1.Snackbar, { open: open, autoHideDuration: 4000, onClose: handleClose, message: "Register Successfully" })));
+        React.createElement(core_1.Snackbar, { open: open, autoHideDuration: 4000, onClose: handleClose, message: "\u0110\u0103ng k\u00ED th\u00E0nh c\u00F4ng!" })));
 }
 exports.default = react_redux_1.connect(function (state) { return state.authenticate; }, AuthenticationStore.actionCreators)(SignUp);
 //# sourceMappingURL=index.js.map
