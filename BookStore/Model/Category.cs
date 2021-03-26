@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 #nullable disable
 
@@ -25,8 +25,8 @@ namespace BookStore.Model
         [StringLength(50)]
         public string Name { get; set; }
 
-        [JsonIgnore]
         [InverseProperty(nameof(Book.Category))]
+        [JsonIgnore]
         public virtual ICollection<Book> Books { get; set; }
     }
 }

@@ -17,6 +17,7 @@ import { connect } from 'react-redux';
 import WarningIcon from '@material-ui/icons/Warning';
 import Axios from 'axios';
 import { Redirect, useHistory } from 'react-router';
+import { CircularProgress, Snackbar } from '@material-ui/core';
 function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
@@ -63,29 +64,45 @@ const useStyles = makeStyles((theme) => ({
 type AuthenticateProps = AuthenticationStore.AuthenticateState & typeof AuthenticationStore.actionCreators
 
 function SignUp(props: AuthenticateProps) {
+    const { errors, setError, register, handleSubmit, clearErrors, watch } = useForm();
     const history = useHistory();
     const classes = useStyles();
-    const { handleSubmit, clearErrors, errors, setError, register, watch } = useForm();
     const password = React.useRef({});
     password.current = watch("password", "");
+    const [open, setOpen] = React.useState(false);
+
+    const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
+        history.push("/");
+    };
 
     const [loading, setLoading] = React.useState(false);
 
     const submitHandler = (data: AuthenticationStore.Authenticate) => {
         clearErrors();
+        submit(data);
+    }
+
+    const submit = (data: AuthenticationStore.Authenticate) => {
         setLoading(true);
         Axios.post("/api/users/register", data)
             .then(res => {
                 if (res.status === 200) {
-                    console.log("Successful!");
-                    setLoading(true);
+                    console.log("Successful cc!");
+                    setOpen(true);
+                    setLoading(false);
                 }
             })
             .catch(ex => {
+                setLoading(false);
                 console.log(ex.response);
-                setError("REGISTER_FAIL", {
+                setError("email", {
                     type: "manual",
-                    message: "Create fail!"
+                    message: "Email đã tồn tại!"
                 });
             })
     }
@@ -106,7 +123,7 @@ function SignUp(props: AuthenticateProps) {
                     <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                    Sign up
+                    Đăng Kí
         </Typography>
                 <form className={classes.form} noValidate onSubmit={handleSubmit(submitHandler)}>
                     <Grid container spacing={2}>
@@ -116,10 +133,10 @@ function SignUp(props: AuthenticateProps) {
                                 required
                                 fullWidth
                                 id="lastName"
-                                label="FullName"
+                                label="Họ và Tên"
                                 name="name"
                                 error={errors["name"] !== null && errors["name"] !== undefined}
-                                inputRef={register({ required: "Fullname is required!" })}
+                                inputRef={register({ required: "Họ và Tên không được để trống!" })}
                             />
                             {errors["name"] &&
                                 <div className={classes.warming}>
@@ -134,11 +151,15 @@ function SignUp(props: AuthenticateProps) {
                                 required
                                 fullWidth
                                 id="email"
-                                label="Email Address"
+                                label="Địa chỉ Email"
                                 name="email"
                                 autoComplete="email"
                                 error={errors["email"] !== null && errors["email"] !== undefined}
-                                inputRef={register({ required: "Email is required!" })}
+                                inputRef={register({
+                                    required: "Email không được để trống!", pattern: {
+                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                        message: "Email không hợp lệ!"
+                                    } })}
                             />
                             {errors["email"] &&
                                 <div className={classes.warming}>
@@ -153,11 +174,11 @@ function SignUp(props: AuthenticateProps) {
                                 required
                                 fullWidth
                                 name="password"
-                                label="Password"
+                                label="Mật khẩu"
                                 type="password"
                                 id="password"
                                 error={errors["password"] !== null && errors["password"] !== undefined}
-                                inputRef={register({ required: "Password is required!" })}
+                                inputRef={register({ required: "Mật khẩu không được để trống!" })}
                             />
                             {errors["password"] &&
                                 <div className={classes.warming}>
@@ -172,13 +193,13 @@ function SignUp(props: AuthenticateProps) {
                                 required
                                 fullWidth
                                 name="confirm"
-                                label="Confirm Password"
+                                label="Nhập lại mật khẩu"
                                 type="password"
                                 id="confirm"
                                 error={errors["confirm"] !== null && errors["confirm"] !== undefined}
                                 inputRef={register({
                                     validate: value =>
-                                        value === password.current || "The passwords do not match"
+                                        value === password.current || "Không khớp với mật khẩu"
                                 })}
                             />
                             {errors["confirm"] &&
@@ -196,7 +217,7 @@ function SignUp(props: AuthenticateProps) {
                         color="primary"
                         className={classes.submit}
                     >
-                        Sign Up
+                        {loading ? <CircularProgress style={{ 'color': 'white'}} size="20" /> : "Đăng kí"}
                     </Button>
                     {errors["REGISTER_FAIL"] &&
                         <div className={classes.warming}>
@@ -206,8 +227,8 @@ function SignUp(props: AuthenticateProps) {
                     }
                     <Grid container justify="flex-end">
                         <Grid item>
-                            <Link href="/" variant="body2">
-                                Already have an account? Sign in
+                            <Link href="/#/" variant="body2">
+                                Đã có tài khoản? Đăng nhập
                             </Link>
                         </Grid>
                     </Grid>
@@ -216,6 +237,7 @@ function SignUp(props: AuthenticateProps) {
             <Box mt={5}>
                 <Copyright />
             </Box>
+            <Snackbar open={open} autoHideDuration={4000} onClose={handleClose} message="Register Successfully" />
         </Container>
     );
 }

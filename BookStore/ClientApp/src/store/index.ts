@@ -4,6 +4,7 @@ import * as Books from './Books';
 import * as Authentication from './Authentication';
 import * as Categories from './Category';
 import * as Cart from './Cart';
+import * as Orders from './Orders';
 // The top-level state object
 export interface ApplicationState {
     counter: Counter.CounterState | undefined;
@@ -12,6 +13,7 @@ export interface ApplicationState {
     authenticate: Authentication.AuthenticateState | undefined;
     categories: Categories.CategoryState | undefined;
     cart: Cart.CartState | undefined
+    orders: Orders.OrderState | undefined
 }
 
 // Whenever an action is dispatched, Redux will update each top-level application state property using
@@ -23,7 +25,8 @@ export const reducers = {
     books: Books.reducer,
     authenticate: Authentication.reducer,
     categories: Categories.reducer,
-    cart: Cart.reducer
+    cart: Cart.reducer,
+    orders: Orders.reducer
 };
 
 // This type can be used as a hint on action creators so that its 'dispatch' and 'getState' params are

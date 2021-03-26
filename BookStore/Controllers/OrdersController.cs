@@ -26,7 +26,7 @@ namespace BookStore.Controllers
         {
             if (UserExists(userId))
             {
-                var order = await _context.Orders.Where(s => s.UserId == userId).ToListAsync();
+                var order = await _context.Orders.Where(s => s.UserId == userId).OrderByDescending(o => o.CreateTime).Include(o => o.User).Include(o => o.OrderDetails).ThenInclude(or => or.Book).ToListAsync();
 
                 if (order == null)
                 {
@@ -43,7 +43,7 @@ namespace BookStore.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
         {
-            return await _context.Orders.ToListAsync();
+            return await _context.Orders.OrderByDescending(o => o.CreateTime).Include(o => o.User).Include(o => o.OrderDetails).ThenInclude(or => or.Book).ToListAsync();
         }
 
         // GET: api/Orders/5
@@ -96,6 +96,7 @@ namespace BookStore.Controllers
         [HttpPost]
         public async Task<ActionResult<Order>> PostOrder(Order order)
         {
+            order.CreateTime = DateTime.Now;
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
 
@@ -106,7 +107,7 @@ namespace BookStore.Controllers
         // POST: api/Orders/users/{userId}/books/{bookId}/productCarts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("users/{userId}/books/{bookId}/productCarts")]
-        public async Task<ActionResult<Order>> OrderProductInProductCart(int userId, int bookId)
+        public async Task<ActionResult<Order>> OrderProductInProductCart(int userId, int bookId, [FromBody] Order order)
         {
             if (UserExists(userId))
             {
@@ -128,6 +129,8 @@ namespace BookStore.Controllers
                                 Order.User = CheckUser;
                                 Order.CreateTime = DateTime.Now;
                                 Order.Total = (ProductCart.Quantity * CheckBook.Price);
+                                Order.PhoneNumber = order.PhoneNumber;
+                                Order.Address = order.Address;
                                 _context.Orders.Add(Order);
                                 await _context.SaveChangesAsync();
                                 var GetOrder = _context.Orders.Where(s => s.UserId.Equals(CheckUser.Id)).OrderByDescending(s => s.CreateTime).
@@ -175,6 +178,93 @@ namespace BookStore.Controllers
                 else
                 {
                     return NotFound("Book can not found by book id!");
+                }
+            }
+            else
+            {
+                return NotFound("User can not found by userId!");
+            }
+        }
+
+        // POST: api/Orders/users/{userId}/books/productCarts
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost("users/{userId}/books/productCarts")]
+        public async Task<ActionResult<Order>> OrderListProductsInProductCart(int userId, [FromBody] Order order)
+        {
+            if (UserExists(userId))
+            {
+                var CheckUser = await _context.Users.FindAsync(userId);
+
+                var ListProductsInCart = await _context.ProductCarts.Where(product => product.UserId == CheckUser.Id && product.Status.Equals(true)).ToListAsync();
+                if (ListProductsInCart.Count != 0 && ListProductsInCart != null)
+                {
+                    using var transaction = _context.Database.BeginTransaction();
+                    try
+                    {
+                        var result =(from ri in _context.ProductCarts
+                                      join rr in _context.Books
+                                         on ri.BookId equals rr.Id
+                                      where ri.UserId == CheckUser.Id && ri.Status.Equals(true)
+                                      select
+                                      (
+                                          ri.Quantity * rr.Price
+                                      )).Sum() ;
+                        var Order = new Order();
+                        Order.UserId = CheckUser.Id;
+                        Order.User = CheckUser;
+                        Order.CreateTime = DateTime.Now;
+                        Order.Total = result;
+                        Order.PhoneNumber = order.PhoneNumber;
+                        Order.Address = order.Address;
+                        _context.Orders.Add(Order);
+                        await _context.SaveChangesAsync();
+                        var GetOrder = _context.Orders.Where(s => s.UserId.Equals(CheckUser.Id)).OrderByDescending(s => s.CreateTime).
+                                    FirstOrDefault();
+                        foreach (ProductCart productCart in ListProductsInCart)
+                        {
+                            var CheckBook = await _context.Books.FindAsync(productCart.BookId);
+                            if (CheckBook.Quantity >= productCart.Quantity)
+                            {
+                                var OrderDetail = new OrderDetail();
+                                OrderDetail.OrderId = GetOrder.Id;
+                                OrderDetail.BookId = CheckBook.Id;
+                                OrderDetail.Quantity = productCart.Quantity;
+                                OrderDetail.Price = CheckBook.Price;
+                                _context.OrderDetails.Add(OrderDetail);
+                                await _context.SaveChangesAsync();
+                                _context.Entry(productCart).State = EntityState.Modified;
+                                try
+                                {
+                                    productCart.Status = false;
+                                    await _context.SaveChangesAsync();
+                                    _context.Entry(CheckBook).State = EntityState.Modified;
+                                    CheckBook.Quantity = CheckBook.Quantity - productCart.Quantity;
+                                    await _context.SaveChangesAsync();
+                                }
+                                catch (DbUpdateConcurrencyException)
+                                {
+                                    throw;
+                                }
+                               
+                            }
+                            else
+                            {
+                                transaction.Rollback();
+                                return BadRequest("Quantity of product is not enought to order!");
+                            }
+                        }
+                        transaction.Commit();
+                        return Ok("Order successfull!");
+                    }
+                    catch (Exception e)
+                    {
+                        transaction.Rollback();
+                        return BadRequest(e);
+                    }
+                }
+                else
+                {
+                    return NotFound("List Product Cart can not found by user id");
                 }
             }
             else

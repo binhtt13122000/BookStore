@@ -31,7 +31,7 @@ const BookDetail = (props: BookProps) => {
     }
     return <main className="container">
         <div className="left-column">
-            <img className="active" src="https://1.bp.blogspot.com/-Yqc7dYMjV4k/WPByXopDvrI/AAAAAAAAIWU/d-z3mInf5YIvjSYK2XCVQi_QBhB-HHM-gCLcB/s320/The%2BObject%2BOriented%2Bthought%2Bprocess.jpeg" alt="Book" width="80%" />
+            <img className="active" src={props.books[0] && props.books[0].image} alt="Book" width="80%" />
         </div>
         <div className="right-column">
             <div className="product-description">
@@ -43,7 +43,7 @@ const BookDetail = (props: BookProps) => {
             </div>
             <div className="product-price">
                 <span>{props.books[0] && props.books[0].price} VNĐ</span>
-                <button onClick={ addToCart } className="cart-btn">Add to cart</button>
+                <button onClick={ addToCart } className="cart-btn">Thêm vào giỏ hàng</button>
             </div>
         </div>
     </main>

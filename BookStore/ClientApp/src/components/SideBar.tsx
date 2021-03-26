@@ -39,7 +39,7 @@ function CheckboxList(props: CategoryProps) {
 
     return (
         <React.Fragment>
-            <Typography variant="h5" style={{ 'marginBottom': '15px' }}>Categories</Typography>
+            <Typography variant="h5" style={{ 'marginBottom': '15px' }}>Danh mục sách</Typography>
         <List className={classes.root}>
             {props.categories.map((category: CategoryStore.Category, index: number) => {
                 const labelId = 'category-' + category.id;

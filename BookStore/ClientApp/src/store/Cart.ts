@@ -1,5 +1,4 @@
-﻿import { red } from '@material-ui/core/colors';
-import axios from 'axios';
+﻿import axios from 'axios';
 import { Action, Reducer } from 'redux';
 import { AppThunkAction } from './';
 
@@ -54,7 +53,10 @@ export interface DeleteCart {
     id: number;
 }
 
-type KnownAction = ReceiveCartAction | RequestCartAction | AddToCartRequest | AddToCartSuccess | AddToCartFail | RemoveFromCart | UpdateCart | DeleteCart;
+export interface DeleteCartAll {
+    type: "DELETE_CART";
+}
+type KnownAction = ReceiveCartAction | RequestCartAction | AddToCartRequest | AddToCartSuccess | AddToCartFail | RemoveFromCart | UpdateCart | DeleteCart | DeleteCartAll;
 
 export const actionCreators = {
     deleteCart: (id: number, resolve: any): AppThunkAction<KnownAction> => (dispatch, getState) => {
@@ -69,6 +71,9 @@ export const actionCreators = {
                 console.log(ex);
                 resolve();
             })
+    },
+    deleteAll: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
+        dispatch({ type: "DELETE_CART" });
     },
     updateCart: (newData: CartDetail, id: number, index: number, quantity: number, resolve: any): AppThunkAction<KnownAction> => (dispatch, getSetter) => {
         axios.put(`/api/productcarts/${id}`, { ...newData })
@@ -108,9 +113,7 @@ export const actionCreators = {
                 dispatch({ type: "ADD_TO_CART_FAIL" });
             })
         dispatch({ type: "ADD_TO_CART_REQUEST" });
-    }
-
-
+    },
 }
 
 const unloadedState: CartState = { isLoading: false, cartDetails: [] };
@@ -164,6 +167,12 @@ export const reducer: Reducer<CartState> = (state: CartState | undefined, incomi
                 isLoading: false,
                 cartDetails: deletedCartDetails
             }
+        case "DELETE_CART": {
+            return {
+                isLoading: false,
+                cartDetails: []
+            }
+        }
         default:
             return state;
     }

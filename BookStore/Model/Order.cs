@@ -21,6 +21,14 @@ namespace BookStore.Model
         public int Id { get; set; }
         [Column("userId")]
         public int? UserId { get; set; }
+        [Required]
+        [Column("phoneNumber")]
+        [StringLength(12)]
+        public string PhoneNumber { get; set; }
+        [Required]
+        [Column("address")]
+        [StringLength(50)]
+        public string Address { get; set; }
         [Column("createTime", TypeName = "datetime")]
         public DateTime? CreateTime { get; set; }
         [Column("total")]

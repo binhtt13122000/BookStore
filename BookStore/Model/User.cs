@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 #nullable disable
 
 namespace BookStore.Model
 {
     [Table("User")]
-    [Index(nameof(Email), Name = "UQ__User__AB6E61644D0B37D0", IsUnique = true)]
+    [Index(nameof(Email), Name = "UQ__User__AB6E6164DECA1399", IsUnique = true)]
     public partial class User
     {
         public User()
@@ -22,36 +22,31 @@ namespace BookStore.Model
         [Key]
         [Column("id")]
         public int Id { get; set; }
-        
         [Required]
         [Column("email")]
-        [StringLength(50, MinimumLength = 10)]
-        [RegularExpression(@"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}")]
+        [StringLength(50)]
         public string Email { get; set; }
-        
         [Required]
         [Column("password")]
-        [StringLength(100, MinimumLength =5)]
+        [StringLength(100)]
         public string Password { get; set; }
-        
         [Required]
         [Column("name")]
         [StringLength(50)]
-        
         public string Name { get; set; }
         [Column("status")]
-        
         public bool? Status { get; set; }
         [Column("roleId")]
-        
         public int? RoleId { get; set; }
 
         [ForeignKey(nameof(RoleId))]
+        [JsonIgnore]
         [InverseProperty("Users")]
         public virtual Role Role { get; set; }
-        
+        [JsonIgnore]
         [InverseProperty(nameof(Order.User))]
         public virtual ICollection<Order> Orders { get; set; }
+        [JsonIgnore]
         [InverseProperty(nameof(ProductCart.User))]
         public virtual ICollection<ProductCart> ProductCarts { get; set; }
     }

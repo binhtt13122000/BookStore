@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { useHistory } from 'react-router';
+import { Book } from '../store/Books';
 
 
 const useStyles = makeStyles({
@@ -22,13 +23,13 @@ const useStyles = makeStyles({
 export default function BookCard(props: any) {
     const history = useHistory();
     const classes = useStyles();
-    const { book, addToCart } = props;
+    const { book, addToCart }: { book: Book, addToCart: any } = props;
     return (
         <Card className={classes.root}>
             <CardActionArea onClick={e => history.push('/book/' + book.id)}>
                 <CardMedia
                     className={classes.media}
-                    image="https://material-ui.com/static/images/cards/contemplative-reptile.jpg"
+                    image={book.image}
                     title="Contemplative Reptile"
                 />
                 <CardContent>
@@ -49,7 +50,7 @@ export default function BookCard(props: any) {
             <CardActions>
                 <Grid container justify="flex-end">
                     <Button onClick={() => addToCart(book.id)} variant="contained" size="small" color="primary">
-                        Add to Cart
+                        Thêm vào giỏ hàng
                     </Button>
                 </Grid>
             </CardActions>

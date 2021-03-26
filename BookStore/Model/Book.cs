@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 #nullable disable
 
@@ -33,6 +33,8 @@ namespace BookStore.Model
         public double? Price { get; set; }
         [Column("quantity")]
         public int? Quantity { get; set; }
+        [Column("image")]
+        public string Image { get; set; }
         [Column("status")]
         public bool? Status { get; set; }
         [Column("categoryId")]
@@ -42,6 +44,7 @@ namespace BookStore.Model
         [InverseProperty("Books")]
         public virtual Category Category { get; set; }
         [InverseProperty(nameof(OrderDetail.Book))]
+        [JsonIgnore]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         
         [JsonIgnore]

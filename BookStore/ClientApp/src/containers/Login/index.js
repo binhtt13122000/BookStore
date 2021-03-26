@@ -79,22 +79,27 @@ function Login(props) {
             React.createElement("div", { className: classes.paper },
                 React.createElement(Avatar_1.default, { className: classes.avatar },
                     React.createElement(LockOutlined_1.default, null)),
-                React.createElement(Typography_1.default, { component: "h1", variant: "h5" }, "Sign in"),
+                React.createElement(Typography_1.default, { component: "h1", variant: "h5" }, "\u0110\u0103ng nh\u1EADp"),
                 React.createElement("form", { className: classes.form, noValidate: true, autoComplete: "off", onSubmit: handleSubmit(submitHandler) },
-                    React.createElement(TextField_1.default, { variant: "outlined", margin: "normal", required: true, fullWidth: true, id: "email", label: "Email Address", name: "email", autoFocus: true, error: errors["email"] !== null && errors["email"] !== undefined, inputRef: register({ required: "Email is required." }) }),
+                    React.createElement(TextField_1.default, { variant: "outlined", margin: "normal", required: true, fullWidth: true, id: "email", label: "\u0110\u1ECBa ch\u1EC9 Email", name: "email", autoFocus: true, error: errors["email"] !== null && errors["email"] !== undefined, inputRef: register({
+                            required: "Email không được để trống!", pattern: {
+                                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                message: "Email không hợp lệ!"
+                            }
+                        }) }),
                     errors["email"] &&
                         React.createElement("div", { className: classes.warming },
                             React.createElement(Warning_1.default, { className: classes.warmingIcon }),
                             React.createElement("span", null, errors["email"].message)),
-                    React.createElement(TextField_1.default, { variant: "outlined", margin: "normal", required: true, fullWidth: true, name: "password", label: "Password", type: "password", id: "password", error: errors["password"] !== null && errors["password"] !== undefined, inputRef: register({ required: "Password is required." }) }),
+                    React.createElement(TextField_1.default, { variant: "outlined", margin: "normal", required: true, fullWidth: true, name: "password", label: "M\u1EADt kh\u1EA9u", type: "password", id: "password", error: errors["password"] !== null && errors["password"] !== undefined, inputRef: register({ required: "Mật khẩu không được để trống!" }) }),
                     errors["password"] &&
                         React.createElement("div", { className: classes.warming },
                             React.createElement(Warning_1.default, { className: classes.warmingIcon }),
                             React.createElement("span", null, errors["password"].message)),
-                    React.createElement(Button_1.default, { type: "submit", fullWidth: true, variant: "contained", color: "primary", className: classes.submit }, props.isLoading ? "Loading" : "Sign In")),
+                    React.createElement(Button_1.default, { type: "submit", fullWidth: true, variant: "contained", color: "primary", className: classes.submit }, props.isLoading ? "Loading" : "Đăng nhập")),
                 React.createElement(Grid_1.default, { container: true },
                     React.createElement(Grid_1.default, { item: true, onClick: function () { return history.push("/signup"); } },
-                        React.createElement(Typography_1.default, { style: { 'cursor': 'pointer' }, color: "primary", variant: "body2" }, "Don't have an account? Sign Up"))),
+                        React.createElement(Typography_1.default, { style: { 'cursor': 'pointer' }, color: "primary", variant: "body2" }, "Chưa có tài khoản trước đây? Đăng kí"))),
                 React.createElement(Box_1.default, { mt: 5 },
                     React.createElement(Typography_1.default, { variant: "body2", color: "textSecondary", align: "center" },
                         'Copyright © ',

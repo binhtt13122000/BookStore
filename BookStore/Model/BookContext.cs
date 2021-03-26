@@ -29,6 +29,7 @@ namespace BookStore.Model
         {
             if (!optionsBuilder.IsConfigured)
             {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("Server=.\\;Database=BookStore;Trusted_Connection=True;");
             }
         }
@@ -39,6 +40,8 @@ namespace BookStore.Model
 
             modelBuilder.Entity<Book>(entity =>
             {
+                entity.Property(e => e.Image).IsUnicode(false);
+
                 entity.Property(e => e.Status).HasDefaultValueSql("((1))");
 
                 entity.HasOne(d => d.Category)
@@ -49,6 +52,8 @@ namespace BookStore.Model
 
             modelBuilder.Entity<Order>(entity =>
             {
+                entity.Property(e => e.PhoneNumber).IsUnicode(false);
+
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.UserId)

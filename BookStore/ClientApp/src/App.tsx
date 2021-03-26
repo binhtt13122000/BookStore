@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Switch } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import Login from './containers/Login';
 import Counter from './components/Counter';
@@ -15,7 +15,7 @@ import { PublicRoute } from './routes/PublicRoute';
 import { PrivateRoute } from './routes/PrivateRoute';
 import { HashRouter } from 'react-router-dom'
 import CartPage from './containers/CartPage';
-
+import HistoryPage from './containers/HistoryPage';
 type CategoryProps = CategoryStore.CategoryState & typeof CategoryStore.actionCreators
 
 const App = (props: CategoryProps) => {
@@ -32,11 +32,13 @@ const App = (props: CategoryProps) => {
             <PublicRoute key="signup" exact path='/signup' component={SignUp} />
             <Layout>
                 <PrivateRoute exact path='/home' key="home" component={BookPage} />
+                <PrivateRoute exact path='/history' key="history" component={HistoryPage} />
                 <PrivateRoute exact path='/counter' key="counter" component={Counter} />
                 <PrivateRoute exact path='/admin/home' key="admin/home/managebook" component={BookManage} />
                 <PrivateRoute key="cartpage" path="/cart" exact component={CartPage} />
                 <PrivateRoute key="book/id" path='/book/:id?' component={BookDetail} />
             </Layout>
+            <Route component={(props: any) => <div>Not found</div>} />
         </Switch>
 </HashRouter>
 };

@@ -72,7 +72,7 @@ exports.actionCreators = {
     createBooks: function (book, resolve) { return function (dispatch, getState) {
         axios_1.default.post("api/Books", __assign({}, book))
             .then(function (response) {
-            if (response.status === 200) {
+            if (response.status === 201) {
                 dispatch({ type: 'ADD_BOOK', newBook: response.data });
                 resolve();
             }
