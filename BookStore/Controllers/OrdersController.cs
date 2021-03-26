@@ -204,7 +204,7 @@ namespace BookStore.Controllers
                         var result =(from ri in _context.ProductCarts
                                       join rr in _context.Books
                                          on ri.BookId equals rr.Id
-                                      where ri.UserId == CheckUser.Id
+                                      where ri.UserId == CheckUser.Id && ri.Status.Equals(true)
                                       select
                                       (
                                           ri.Quantity * rr.Price
