@@ -57,9 +57,9 @@ var useStyles = styles_1.makeStyles(function (theme) { return ({
     },
 }); });
 function SignUp(props) {
+    var _a = react_hook_form_1.useForm(), errors = _a.errors, setError = _a.setError, register = _a.register, handleSubmit = _a.handleSubmit, clearErrors = _a.clearErrors, watch = _a.watch;
     var history = react_router_1.useHistory();
     var classes = useStyles();
-    var _a = react_hook_form_1.useForm(), handleSubmit = _a.handleSubmit, clearErrors = _a.clearErrors, errors = _a.errors, setError = _a.setError, register = _a.register, watch = _a.watch;
     var password = React.useRef({});
     password.current = watch("password", "");
     var _b = React.useState(false), open = _b[0], setOpen = _b[1];
@@ -73,11 +73,14 @@ function SignUp(props) {
     var _c = React.useState(false), loading = _c[0], setLoading = _c[1];
     var submitHandler = function (data) {
         clearErrors();
+        submit(data);
+    };
+    var submit = function (data) {
         setLoading(true);
         axios_1.default.post("/api/users/register", data)
             .then(function (res) {
             if (res.status === 200) {
-                console.log("Successful!");
+                console.log("Successful cc!");
                 setOpen(true);
                 setLoading(false);
             }
@@ -85,9 +88,9 @@ function SignUp(props) {
             .catch(function (ex) {
             setLoading(false);
             console.log(ex.response);
-            setError("REGISTER_FAIL", {
+            setError("email", {
                 type: "manual",
-                message: "Đăng kí thất bại!"
+                message: "Email đã tồn tại!"
             });
         });
     };
@@ -147,7 +150,7 @@ function SignUp(props) {
                         React.createElement("span", null, errors["REGISTER_FAIL"].message)),
                 React.createElement(Grid_1.default, { container: true, justify: "flex-end" },
                     React.createElement(Grid_1.default, { item: true },
-                        React.createElement(Link_1.default, { href: "/", variant: "body2" }, "Already have an account? Sign in"))))),
+                        React.createElement(Link_1.default, { href: "/#/", variant: "body2" }, "\u0110\u00E3 c\u00F3 t\u00E0i kho\u1EA3n? \u0110\u0103ng nh\u1EADp"))))),
         React.createElement(Box_1.default, { mt: 5 },
             React.createElement(Copyright, null)),
         React.createElement(core_1.Snackbar, { open: open, autoHideDuration: 4000, onClose: handleClose, message: "Register Successfully" })));

@@ -64,13 +64,12 @@ const useStyles = makeStyles((theme) => ({
 type AuthenticateProps = AuthenticationStore.AuthenticateState & typeof AuthenticationStore.actionCreators
 
 function SignUp(props: AuthenticateProps) {
+    const { errors, setError, register, handleSubmit, clearErrors, watch } = useForm();
     const history = useHistory();
     const classes = useStyles();
-    const { handleSubmit, clearErrors, errors, setError, register, watch } = useForm();
     const password = React.useRef({});
     password.current = watch("password", "");
     const [open, setOpen] = React.useState(false);
-
 
     const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
         if (reason === 'clickaway') {
@@ -85,11 +84,15 @@ function SignUp(props: AuthenticateProps) {
 
     const submitHandler = (data: AuthenticationStore.Authenticate) => {
         clearErrors();
+        submit(data);
+    }
+
+    const submit = (data: AuthenticationStore.Authenticate) => {
         setLoading(true);
         Axios.post("/api/users/register", data)
             .then(res => {
                 if (res.status === 200) {
-                    console.log("Successful!");
+                    console.log("Successful cc!");
                     setOpen(true);
                     setLoading(false);
                 }
@@ -97,9 +100,9 @@ function SignUp(props: AuthenticateProps) {
             .catch(ex => {
                 setLoading(false);
                 console.log(ex.response);
-                setError("REGISTER_FAIL", {
+                setError("email", {
                     type: "manual",
-                    message: "Đăng kí thất bại!"
+                    message: "Email đã tồn tại!"
                 });
             })
     }
@@ -224,8 +227,8 @@ function SignUp(props: AuthenticateProps) {
                     }
                     <Grid container justify="flex-end">
                         <Grid item>
-                            <Link href="/" variant="body2">
-                                Already have an account? Sign in
+                            <Link href="/#/" variant="body2">
+                                Đã có tài khoản? Đăng nhập
                             </Link>
                         </Grid>
                     </Grid>

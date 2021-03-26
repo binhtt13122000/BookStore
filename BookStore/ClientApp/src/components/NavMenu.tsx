@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import * as AuthenticationStore from '../store/Authentication';
 import { ApplicationState } from '../store';
 
-
 type AuthenticateProps = AuthenticationStore.AuthenticateState & typeof AuthenticationStore.actionCreators
 const NavMenu = (props: AuthenticateProps) => {
     const history = useHistory();
@@ -27,12 +26,13 @@ const NavMenu = (props: AuthenticateProps) => {
             <header>
                 <Navbar className="navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3" light>
                     <Container>
-                        <NavbarBrand tag={Link} to="/">BookStore</NavbarBrand>
+                        <NavbarBrand tag={Link} to="/">Cửa hàng sách Quỳnh Lâm</NavbarBrand>
                         <NavbarToggler onClick={toggle} className="mr-2"/>
                         <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={state.isOpen} navbar>
                             <ul className="navbar-nav flex-grow">
                                 <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to="/home">Sản phẩm</NavLink>
+                                    {props.authenticate.roleId === 1 ? <NavLink tag={Link} className="text-dark" to="/home">Sản phẩm</NavLink>
+                                        : <NavLink tag={Link} className="text-dark" to="/admin/home">Sản phẩm</NavLink>}
                                 </NavItem>
                                 {props.authenticate.roleId === 1 ? < NavItem >
                                     <NavLink tag={Link} className="text-dark" to="/cart">Giỏ hàng</NavLink>

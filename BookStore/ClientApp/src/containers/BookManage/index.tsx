@@ -54,7 +54,7 @@ const BookManage = (props: BookProps) => {
     const [imageAsUrl, setImageAsUrl] = React.useState("");
 
     const onChange = (e: any) => {
-        e.preventDefault();
+        e.persist();
         let file = e.target.files[0];
         if (file !== null && file !== undefined) {
             let selectedFile = e.target.files[0];
@@ -89,9 +89,7 @@ const BookManage = (props: BookProps) => {
     }
 
     const handleRowUpdate = (newData: BookStore.Book, oldData: any, resolve: any) => {
-        newData.image = imageAsUrl;
         props.updateBooks(newData, oldData, resolve);
-        setImageAsUrl("");
     }
 
     const handleRowDelete = (oldData: BookStore.Book, resolve: any) => {

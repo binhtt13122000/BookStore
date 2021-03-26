@@ -6,7 +6,6 @@ export interface OrderState {
     isLoading: boolean;
     orders: Order[];
 }
-
 export interface Order {
     id: number;
     userId: number;
