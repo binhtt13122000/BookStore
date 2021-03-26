@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 #nullable disable
 
@@ -39,10 +40,13 @@ namespace BookStore.Model
         public int? RoleId { get; set; }
 
         [ForeignKey(nameof(RoleId))]
+        [JsonIgnore]
         [InverseProperty("Users")]
         public virtual Role Role { get; set; }
+        [JsonIgnore]
         [InverseProperty(nameof(Order.User))]
         public virtual ICollection<Order> Orders { get; set; }
+        [JsonIgnore]
         [InverseProperty(nameof(ProductCart.User))]
         public virtual ICollection<ProductCart> ProductCarts { get; set; }
     }

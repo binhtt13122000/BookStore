@@ -38,7 +38,7 @@ const NavMenu = (props: AuthenticateProps) => {
                                     <NavLink tag={Link} className="text-dark" to="/cart">Giỏ hàng</NavLink>
                                 </NavItem> : null}
                                 <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to="/fetch-data">Lịch sử giao dịch</NavLink>
+                                    <NavLink tag={Link} className="text-dark" to="/history">Lịch sử giao dịch</NavLink>
                                 </NavItem>
                                 <UncontrolledDropdown nav inNavbar>
                                     <DropdownToggle nav caret>

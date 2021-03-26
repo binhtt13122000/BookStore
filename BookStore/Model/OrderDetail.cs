@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 #nullable disable
 
@@ -27,6 +28,7 @@ namespace BookStore.Model
         [InverseProperty("OrderDetails")]
         public virtual Book Book { get; set; }
         [ForeignKey(nameof(OrderId))]
+        [JsonIgnore]
         [InverseProperty("OrderDetails")]
         public virtual Order Order { get; set; }
     }

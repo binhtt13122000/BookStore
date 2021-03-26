@@ -26,7 +26,7 @@ namespace BookStore.Controllers
         {
             if (UserExists(userId))
             {
-                var order = await _context.Orders.Where(s => s.UserId == userId).ToListAsync();
+                var order = await _context.Orders.Where(s => s.UserId == userId).OrderByDescending(o => o.CreateTime).Include(o => o.User).Include(o => o.OrderDetails).ThenInclude(or => or.Book).ToListAsync();
 
                 if (order == null)
                 {
@@ -43,7 +43,7 @@ namespace BookStore.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
         {
-            return await _context.Orders.ToListAsync();
+            return await _context.Orders.OrderByDescending(o => o.CreateTime).Include(o => o.User).Include(o => o.OrderDetails).ThenInclude(or => or.Book).ToListAsync();
         }
 
         // GET: api/Orders/5
