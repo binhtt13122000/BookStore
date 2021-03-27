@@ -9,6 +9,10 @@ exports.actionCreators = {
             if (response.status === 200) {
                 dispatch({ type: 'RECEIVE_ORDERS', orders: response.data });
             }
+        })
+            .catch(function (ex) {
+            console.log(ex);
+            dispatch({ type: 'RECEIVE_ORDERS', orders: [] });
         });
         dispatch({ type: 'REQUEST_ORDERS' });
     }; },

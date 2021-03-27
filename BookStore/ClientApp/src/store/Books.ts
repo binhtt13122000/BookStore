@@ -56,7 +56,11 @@ export const actionCreators = {
                 if (response.status === 200) {
                     dispatch({ type: 'RECEIVE_BOOK', books: response.data });
                 }
-            });
+            })
+            .catch(ex => {
+                console.log(ex);
+                dispatch({ type: 'RECEIVE_BOOK', books: [] });
+            })
 
         dispatch({ type: 'REQUEST_BOOK' });
     },
@@ -101,32 +105,36 @@ export const actionCreators = {
         }
     },
 
-    createBooks: (book: Book, resolve: any): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    createBooks: (book: Book, resolve: any, setMessage: any): AppThunkAction<KnownAction> => (dispatch, getState) => {
         axios.post(`api/Books`, {...book})
             .then(response => {
                 if (response.status === 201) {
                     dispatch({ type: 'ADD_BOOK', newBook: response.data });
+                    setMessage("Thêm sản phẩm thành công!")
                     resolve();
                 }
             })
             .catch(err => {
                 resolve();
+                setMessage("Thêm sản phẩm thất bại!")
                 console.log(err)
             });
 
     },
 
-    updateBooks: (newBook: Book, oldBook: any, resolve: any): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    updateBooks: (newBook: Book, oldBook: any, resolve: any, setMessage?: any): AppThunkAction<KnownAction> => (dispatch, getState) => {
         axios.put(`api/Books/${oldBook.id}`, { ...newBook })
             .then(response => {
                 if (response.status === 204) {
-                    dispatch({ type: "UPDATE_BOOK", updateBook: newBook, index: oldBook.tableData.id })
+                    dispatch({ type: "UPDATE_BOOK", updateBook: newBook, index: oldBook.tableData.id });
+                    setMessage("Chỉnh sửa sản phẩm thành công!")
                 }
                 resolve();
             })
             .catch(err => {
                 resolve();
-                console.log(err)
+                setMessage("Chỉnh sửa thất bại!");
+                console.log(err.response)
             });
 
     }

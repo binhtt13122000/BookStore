@@ -96,7 +96,10 @@ export const actionCreators = {
                     dispath({ type: "RECEIVE_CART", cartDetails: response.data })
                 }
             })
-            .catch(ex => console.log(ex));
+            .catch(ex => {
+                console.log(ex);
+                dispath({ type: "RECEIVE_CART", cartDetails: [] })
+            });
         dispath({ type: 'REQUEST_CART' });
     },
 

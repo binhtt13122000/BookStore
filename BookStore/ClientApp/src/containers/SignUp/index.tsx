@@ -136,7 +136,7 @@ function SignUp(props: AuthenticateProps) {
                                 label="Họ và Tên"
                                 name="name"
                                 error={errors["name"] !== null && errors["name"] !== undefined}
-                                inputRef={register({ required: "Họ và Tên không được để trống!" })}
+                                inputRef={register({ required: "Họ và Tên không được để trống!", maxLength: { value: 50, message: "Họ và tên tối đa 50 kí tự!" } })}
                             />
                             {errors["name"] &&
                                 <div className={classes.warming}>
@@ -159,7 +159,7 @@ function SignUp(props: AuthenticateProps) {
                                     required: "Email không được để trống!", pattern: {
                                         value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                                         message: "Email không hợp lệ!"
-                                    } })}
+                                    }, maxLength: { value: 50, message: "Họ và tên tối đa 50 kí tự!" } })}
                             />
                             {errors["email"] &&
                                 <div className={classes.warming}>

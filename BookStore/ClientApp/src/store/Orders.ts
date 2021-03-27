@@ -33,6 +33,10 @@ export const actionCreators = {
                 if (response.status === 200) {
                     dispatch({ type: 'RECEIVE_ORDERS', orders: response.data });
                 }
+            })
+            .catch(ex => {
+                console.log(ex);
+                dispatch({ type: 'RECEIVE_ORDERS', orders: [] });
             });
 
         dispatch({ type: 'REQUEST_ORDERS' });

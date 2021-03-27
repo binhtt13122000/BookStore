@@ -58,7 +58,10 @@ exports.actionCreators = {
                 dispath({ type: "RECEIVE_CART", cartDetails: response.data });
             }
         })
-            .catch(function (ex) { return console.log(ex); });
+            .catch(function (ex) {
+            console.log(ex);
+            dispath({ type: "RECEIVE_CART", cartDetails: [] });
+        });
         dispath({ type: 'REQUEST_CART' });
     }; },
     addToCart: function (cartDetail, setMessage) { return function (dispatch, getState) {

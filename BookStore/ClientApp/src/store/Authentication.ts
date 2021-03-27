@@ -46,7 +46,7 @@ type KnownAction = RequestLoginAction | LoginSuccessAction | LoginFailAction | R
 
 export const actionCreators = {
     logout: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
-        localStorage.clear();
+        localStorage.removeItem("loggedIn");
         dispatch({ type: "SUCCESS_LOGOUT" })
     },
     login: (authenticate: Authenticate, setError: any): AppThunkAction<KnownAction> => (dispatch, getState) => {
@@ -106,7 +106,7 @@ export const reducer: Reducer<AuthenticateState> = (state: AuthenticateState | u
             };
         case 'LOGOUT':
             return {
-                authenticate: state.authenticate,
+                authenticate: {email: ""},
                 status: false,
                 isLoading: true
             };

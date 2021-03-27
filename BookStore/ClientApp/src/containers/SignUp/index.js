@@ -111,7 +111,7 @@ function SignUp(props) {
             React.createElement("form", { className: classes.form, noValidate: true, onSubmit: handleSubmit(submitHandler) },
                 React.createElement(Grid_1.default, { container: true, spacing: 2 },
                     React.createElement(Grid_1.default, { item: true, xs: 12 },
-                        React.createElement(TextField_1.default, { variant: "outlined", required: true, fullWidth: true, id: "lastName", label: "H\u1ECD v\u00E0 T\u00EAn", name: "name", error: errors["name"] !== null && errors["name"] !== undefined, inputRef: register({ required: "Họ và Tên không được để trống!" }) }),
+                        React.createElement(TextField_1.default, { variant: "outlined", required: true, fullWidth: true, id: "lastName", label: "H\u1ECD v\u00E0 T\u00EAn", name: "name", error: errors["name"] !== null && errors["name"] !== undefined, inputRef: register({ required: "Họ và Tên không được để trống!", maxLength: { value: 50, message: "Họ và tên tối đa 50 kí tự!" } }) }),
                         errors["name"] &&
                             React.createElement("div", { className: classes.warming },
                                 React.createElement(Warning_1.default, { className: classes.warmingIcon }),
@@ -121,7 +121,7 @@ function SignUp(props) {
                                 required: "Email không được để trống!", pattern: {
                                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                                     message: "Email không hợp lệ!"
-                                }
+                                }, maxLength: { value: 50, message: "Họ và tên tối đa 50 kí tự!" }
                             }) }),
                         errors["email"] &&
                             React.createElement("div", { className: classes.warming },

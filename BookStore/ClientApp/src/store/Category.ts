@@ -31,6 +31,10 @@ export const actionCreators = {
             .then(response => response.json() as Promise<Category[]>)
             .then(data => {
                 dispatch({ type: 'RECEIVE_CATEGORY', category: data });
+            })
+            .catch(ex => {
+                console.log(ex);
+                dispatch({ type: 'RECEIVE_CATEGORY', category: [] });
             });
 
         dispatch({ type: 'REQUEST_CATEGORY' });

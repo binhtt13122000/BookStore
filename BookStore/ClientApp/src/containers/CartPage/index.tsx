@@ -76,7 +76,7 @@ const CartPage = (props: CartProps) => {
             .catch(ex => {
                 setLoading(false);
                 console.log(ex.response);
-                setError("phone", {
+                setError("ERROR", {
                     type: "manual",
                     message: "Thanh toán thất bại!"
                 });
@@ -147,12 +147,13 @@ const CartPage = (props: CartProps) => {
                         autoFocus
                         margin="dense"
                         id="address"
+                        onFocus={() => clearErrors("ERROR")}
                         name="address"
                         label="Địa chỉ"
                         type="text"
                         fullWidth
                         error={errors["address"] !== null && errors["address"] !== undefined}
-                        inputRef={register({ required: "Địa chỉ được yêu cầu!" })}
+                        inputRef={register({ required: "Địa chỉ được yêu cầu!", maxLength: {value: 50, message: "Tối đa 50 kí tự!"} })}
                     />
                     {errors["address"] &&
                         <div className={classes.warming}>
@@ -163,12 +164,18 @@ const CartPage = (props: CartProps) => {
                     <TextField
                         margin="dense"
                         id="phone"
+                        onFocus={() => clearErrors("ERROR")}
                         name="phone"
                         label="Số điện thoại"
                         type="tel"
                         fullWidth
                         error={errors["phone"] !== null && errors["phone"] !== undefined}
-                        inputRef={register({ required: "Số điện thoại được yêu cầu!" })}
+                        inputRef={register({
+                            required: "Số điện thoại được yêu cầu!", pattern: {
+                                value: /((09|03|07|08|05)+([0-9]{8})\b)/g,
+                                message: "Số điện thoại không hợp lệ"
+                            }
+                        })}
                     />
                     {errors["phone"] &&
                         <div className={classes.warming}>
@@ -176,10 +183,10 @@ const CartPage = (props: CartProps) => {
                             <span>{errors["phone"].message}</span>
                         </div>
                     }
-                    {errors["phone"] &&
+                    {errors["ERROR"] &&
                         <div className={classes.warming}>
                             <WarningIcon className={classes.warmingIcon} />
-                        <span>{errors["phone"].message}</span>
+                            <span>{errors["ERROR"].message}</span>
                         </div>
                     }
             </DialogContent>

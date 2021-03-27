@@ -28,6 +28,10 @@ exports.actionCreators = {
             if (response.status === 200) {
                 dispatch({ type: 'RECEIVE_BOOK', books: response.data });
             }
+        })
+            .catch(function (ex) {
+            console.log(ex);
+            dispatch({ type: 'RECEIVE_BOOK', books: [] });
         });
         dispatch({ type: 'REQUEST_BOOK' });
     }; },
@@ -69,30 +73,34 @@ exports.actionCreators = {
             dispatch({ type: 'REQUEST_BOOK' });
         }
     }; },
-    createBooks: function (book, resolve) { return function (dispatch, getState) {
+    createBooks: function (book, resolve, setMessage) { return function (dispatch, getState) {
         axios_1.default.post("api/Books", __assign({}, book))
             .then(function (response) {
             if (response.status === 201) {
                 dispatch({ type: 'ADD_BOOK', newBook: response.data });
+                setMessage("Thêm sản phẩm thành công!");
                 resolve();
             }
         })
             .catch(function (err) {
             resolve();
+            setMessage("Thêm sản phẩm thất bại!");
             console.log(err);
         });
     }; },
-    updateBooks: function (newBook, oldBook, resolve) { return function (dispatch, getState) {
+    updateBooks: function (newBook, oldBook, resolve, setMessage) { return function (dispatch, getState) {
         axios_1.default.put("api/Books/" + oldBook.id, __assign({}, newBook))
             .then(function (response) {
             if (response.status === 204) {
                 dispatch({ type: "UPDATE_BOOK", updateBook: newBook, index: oldBook.tableData.id });
+                setMessage("Chỉnh sửa sản phẩm thành công!");
             }
             resolve();
         })
             .catch(function (err) {
             resolve();
-            console.log(err);
+            setMessage("Chỉnh sửa thất bại!");
+            console.log(err.response);
         });
     }; }
 };

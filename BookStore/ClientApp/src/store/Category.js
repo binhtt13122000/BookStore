@@ -7,6 +7,10 @@ exports.actionCreators = {
             .then(function (response) { return response.json(); })
             .then(function (data) {
             dispatch({ type: 'RECEIVE_CATEGORY', category: data });
+        })
+            .catch(function (ex) {
+            console.log(ex);
+            dispatch({ type: 'RECEIVE_CATEGORY', category: [] });
         });
         dispatch({ type: 'REQUEST_CATEGORY' });
     }; },

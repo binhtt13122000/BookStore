@@ -4,7 +4,7 @@ exports.reducer = exports.actionCreators = void 0;
 var axios_1 = require("axios");
 exports.actionCreators = {
     logout: function () { return function (dispatch, getState) {
-        localStorage.clear();
+        localStorage.removeItem("loggedIn");
         dispatch({ type: "SUCCESS_LOGOUT" });
     }; },
     login: function (authenticate, setError) { return function (dispatch, getState) {
@@ -62,7 +62,7 @@ var reducer = function (state, incomingAction) {
             };
         case 'LOGOUT':
             return {
-                authenticate: state.authenticate,
+                authenticate: { email: "" },
                 status: false,
                 isLoading: true
             };

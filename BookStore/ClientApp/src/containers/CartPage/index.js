@@ -76,7 +76,7 @@ var CartPage = function (props) {
             .catch(function (ex) {
             setLoading(false);
             console.log(ex.response);
-            setError("phone", {
+            setError("ERROR", {
                 type: "manual",
                 message: "Thanh toán thất bại!"
             });
@@ -128,20 +128,25 @@ var CartPage = function (props) {
                             return a + b;
                         }, 0))),
                     React.createElement(core_1.DialogContentText, null, "Vui l\u00F2ng nh\u1EADp s\u1ED1 \u0111i\u1EC7n tho\u1EA1i li\u00EAn h\u1EC7 v\u00E0 \u0111\u1ECBa ch\u1EC9 \u0111\u1EC3 h\u1ED7 tr\u1EE3 v\u1EADn chuy\u1EC3n!"),
-                    React.createElement(core_1.TextField, { autoFocus: true, margin: "dense", id: "address", name: "address", label: "\u0110\u1ECBa ch\u1EC9", type: "text", fullWidth: true, error: errors["address"] !== null && errors["address"] !== undefined, inputRef: register({ required: "Địa chỉ được yêu cầu!" }) }),
+                    React.createElement(core_1.TextField, { autoFocus: true, margin: "dense", id: "address", onFocus: function () { return clearErrors("ERROR"); }, name: "address", label: "\u0110\u1ECBa ch\u1EC9", type: "text", fullWidth: true, error: errors["address"] !== null && errors["address"] !== undefined, inputRef: register({ required: "Địa chỉ được yêu cầu!", maxLength: { value: 50, message: "Tối đa 50 kí tự!" } }) }),
                     errors["address"] &&
                         React.createElement("div", { className: classes.warming },
                             React.createElement(Warning_1.default, { className: classes.warmingIcon }),
                             React.createElement("span", null, errors["address"].message)),
-                    React.createElement(core_1.TextField, { margin: "dense", id: "phone", name: "phone", label: "S\u1ED1 \u0111i\u1EC7n tho\u1EA1i", type: "tel", fullWidth: true, error: errors["phone"] !== null && errors["phone"] !== undefined, inputRef: register({ required: "Số điện thoại được yêu cầu!" }) }),
+                    React.createElement(core_1.TextField, { margin: "dense", id: "phone", onFocus: function () { return clearErrors("ERROR"); }, name: "phone", label: "S\u1ED1 \u0111i\u1EC7n tho\u1EA1i", type: "tel", fullWidth: true, error: errors["phone"] !== null && errors["phone"] !== undefined, inputRef: register({
+                            required: "Số điện thoại được yêu cầu!", pattern: {
+                                value: /((09|03|07|08|05)+([0-9]{8})\b)/g,
+                                message: "Số điện thoại không hợp lệ"
+                            }
+                        }) }),
                     errors["phone"] &&
                         React.createElement("div", { className: classes.warming },
                             React.createElement(Warning_1.default, { className: classes.warmingIcon }),
                             React.createElement("span", null, errors["phone"].message)),
-                    errors["phone"] &&
+                    errors["ERROR"] &&
                         React.createElement("div", { className: classes.warming },
                             React.createElement(Warning_1.default, { className: classes.warmingIcon }),
-                            React.createElement("span", null, errors["phone"].message))),
+                            React.createElement("span", null, errors["ERROR"].message))),
                 React.createElement(core_1.DialogActions, null,
                     React.createElement(core_1.Button, { onClick: handleClose, color: "primary" }, "Tho\u00E1t"),
                     React.createElement(core_1.Button, { type: "submit", color: "primary" }, "Thanh To\u00E1n")))));
