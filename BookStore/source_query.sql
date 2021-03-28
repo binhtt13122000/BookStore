@@ -61,3 +61,10 @@ insert into [Role]([name]) values ('USER'), ('ADMIN')
 
 insert into [Category]([name]) values (N'Sách văn học'), (N'Sách tin học'), (N'Sách toán học')
 
+insert into [Book]([name], [author], price, quantity, [image], [status], categoryId) 
+values (N'Lập trình OOP', N'Hoàng Đức Nam', 23000, 10, 'https://tintuc.viettelstore.vn/wp-content/uploads/2020/02/ghep-anh-chan-troi-hinh-vuong-1.jpg', 1, 2),
+(N'100 bài văn hay', N'Xuân Diệu', 40000, 10, 'https://firebasestorage.googleapis.com/v0/b/bookshop-9bea7.appspot.com/o/books%2FScrum%20vs%20Waterfall.jpg?alt=media&token=e0544423-b28e-4d98-bf79-ba92c32012b2', 1, 1),
+(N'Toán học đại cương', N'Đỗ Duy', 36000, 10, 'https://firebasestorage.googleapis.com/v0/b/bookshop-9bea7.appspot.com/o/books%2Fmindmap.jpg?alt=media&token=85343aa0-f5be-459d-b8da-89d3d9527ac3', 1, 3)
+
+
+
