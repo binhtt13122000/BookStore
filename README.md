@@ -2,7 +2,7 @@
 ## Develop by Truong Thanh Binh, Pham Van Danh
 > Book Store Application with  
 > Back-end: ASP.NET Core, EntityFrameworkCore 
-> Front-end: React, Redux, Redux-thunk, Typescript 
+> Front-end: React, Redux, Redux-thunk, Typescript  
 > Database: SQLServer 
 > Image Storage: Firebase Storage
 
