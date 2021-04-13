@@ -3,7 +3,8 @@
 > Book Store Application with  
 > Back-end: ASP.NET Core, EntityFrameworkCore 
 > Front-end: React, Redux, Redux-thunk, Typescript 
-> Database: SQLServer
+> Database: SQLServer 
+> Image Storage: Firebase Storage
 
 ## Run application
 
